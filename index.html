@@ -515,10 +515,13 @@
     }
    <!-- index.html च्या शेवटी </body> टॅगच्या आधी हा सुधारित कोड टाका -->
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
-  import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-  const firebaseConfig = {// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  // Tumche Firebase Configuration
+  const firebaseConfig = {
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
   apiKey: "AIzaSyANVkGgaGr_A8M-9DsgfE3YSEAwQ5aGTRM",
   authDomain: "order-app-c0c38.firebaseapp.com",
   databaseURL: "https://order-app-c0c38-default-rtdb.asia-southeast1.firebasedatabase.app",
@@ -529,25 +532,24 @@
   measurementId: "G-XYH5G6T5KR"
   };
 
+  // Firebase Initialize kara
   const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+  const database = getDatabase(app);
 
-  // Modal उघडण्यासाठी जागतिक (Global) फंक्शन
-  window.openRakhiModal = function() {
-    const modal = document.getElementById('uploadModal');
+  // Modal open ani close karnyache functions
+  window.openRakhiModal = function(modalId) {
+    const modal = document.getElementById(modalId);
     if (modal) {
-      modal.style.display = 'block';
+      modal.style.display = "block";
     }
   };
 
-  // Modal बंद करण्यासाठी जागतिक (Global) फंक्शन
-  window.closeRakhiModal = function() {
-    const modal = document.getElementById('uploadModal');
+  window.closeRakhiModal = function(modalId) {
+    const modal = document.getElementById(modalId);
     if (modal) {
-      modal.style.display = 'none';
+      modal.style.display = "none";
     }
   };
 </script>
-
 </body>
 </html>
