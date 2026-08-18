@@ -152,7 +152,7 @@
   <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, update, remove, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyANVkGgaGr_A8M-9DsgfE3YSEAwQ5aGTRM",
@@ -171,6 +171,71 @@
     let selectedRakhiKey = "";
     let editRakhiKey = "";
     let base64Image = "";
+    let isInitialLoad = true;
+
+    // Web Audio API Sound Generator for Buzzer Sound
+    function playBuzzerSound() {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        // Beep 1
+        const osc1 = audioCtx.createOscillator();
+        const gain1 = audioCtx.createGain();
+        osc1.type = 'sawtooth';
+        osc1.frequency.setValueAtTime(880, audioCtx.currentTime);
+        gain1.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        osc1.connect(gain1);
+        gain1.connect(audioCtx.destination);
+        osc1.start();
+        osc1.stop(audioCtx.currentTime + 0.2);
+
+        // Beep 2
+        setTimeout(() => {
+          const osc2 = audioCtx.createOscillator();
+          const gain2 = audioCtx.createGain();
+          osc2.type = 'sawtooth';
+          osc2.frequency.setValueAtTime(1046.50, audioCtx.currentTime);
+          gain2.gain.setValueAtTime(0.4, audioCtx.currentTime);
+          osc2.connect(gain2);
+          gain2.connect(audioCtx.destination);
+          osc2.start();
+          osc2.stop(audioCtx.currentTime + 0.3);
+        }, 250);
+      } catch (e) {
+        console.log("Audio play error:", e);
+      }
+    }
+
+    // Auto Request Notification Permission on first click
+    document.body.addEventListener('click', () => {
+      if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
+    }, { once: true });
+
+    function triggerOrderAlert(order) {
+      // Play Sound
+      playBuzzerSound();
+
+      // Show Device Notification
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("🚨 नवीन ऑर्डर आली आहे!", {
+          body: `${order.customerName} यांनी ${order.rakhiName} ची (${order.quantity} नग - ₹${order.totalAmount}) ऑर्डर दिली आहे.`
+        });
+      }
+    }
+
+    // Listener for New Orders
+    const ordersRef = ref(database, 'orders');
+    onChildAdded(ordersRef, (snapshot) => {
+      if (isInitialLoad) return; // Skip existing orders when website loads
+      const order = snapshot.val();
+      triggerOrderAlert(order);
+    });
+
+    onValue(ordersRef, () => {
+      isInitialLoad = false;
+    }, { onlyOnce: true });
 
     window.closeModal = id => document.getElementById(id).style.display = "none";
 
@@ -206,7 +271,6 @@
       }
     };
 
-    // Upload Rakhi Without Description
     window.uploadRakhiToFirebase = function() {
       const name = document.getElementById("uploadName").value.trim();
       const price = document.getElementById("uploadPrice").value.trim();
@@ -228,7 +292,6 @@
       }).catch(err => alert("एरर: " + err.message));
     };
 
-    // Edit Rakhi Function (With Password 0000)
     window.openEditModal = function(key, event) {
       event.stopPropagation();
       if (prompt("राखी एडिट करण्यासाठी ॲडमिन पासवर्ड टाका:") === "0000") {
@@ -247,7 +310,6 @@
       }
     };
 
-    // Update Rakhi in Firebase
     window.updateRakhiToFirebase = function() {
       const name = document.getElementById("editName").value.trim();
       const price = document.getElementById("editPrice").value.trim();
@@ -263,7 +325,6 @@
       }).catch(err => alert("एरर: " + err.message));
     };
 
-    // Delete Rakhi Function (With Password 0000)
     window.deleteRakhi = function(key, event) {
       event.stopPropagation();
       if (prompt("राखी डिलीट करण्यासाठी ॲडमिन पासवर्ड टाका:") === "0000") {
@@ -277,7 +338,6 @@
       }
     };
 
-    // Load Rakhis Grid
     onValue(ref(database, 'rakhis'), snapshot => {
       const container = document.getElementById("rakhiContainer");
       container.innerHTML = "";
@@ -326,7 +386,6 @@
       document.getElementById("orderModal").style.display = "flex";
     };
 
-    // Place Order & Auto Reduce Stock
     window.placeOrder = function() {
       const name = document.getElementById("custName").value.trim();
       const address = document.getElementById("custAddress").value.trim();
@@ -336,13 +395,11 @@
       if (!name || !address || !qty || !phone) return alert("सर्व माहिती भरा!");
       if (qty > selectedRakhi.stock) return alert("शक्य नाही! उपलब्ध साठ्यापेक्षा जास्त नग टाकले आहेत.");
 
-      // Push Order
       push(ref(database, 'orders'), {
         rakhiName: selectedRakhi.name, price: selectedRakhi.price,
         customerName: name, address, quantity: qty, phone,
         totalAmount: selectedRakhi.price * qty, orderDate: new Date().toLocaleString()
       }).then(() => {
-        // Auto Reduce Stock in Firebase
         const newStock = selectedRakhi.stock - qty;
         update(ref(database, 'rakhis/' + selectedRakhiKey), { stock: newStock });
 
