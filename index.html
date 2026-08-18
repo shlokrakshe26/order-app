@@ -84,11 +84,14 @@
       background: var(--primary-color); color: white;
       font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 8px;
     }
-    .badge-low-stock {
+
+    .badge-stock {
       position: absolute; bottom: 6px; left: 6px;
-      background: #e65c00; color: white;
-      font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px;
+      font-size: 10px; font-weight: bold; padding: 3px 7px; border-radius: 4px; color: white;
     }
+    .stock-in { background: #28a745; }
+    .stock-low { background: #e65c00; }
+    .stock-out { background: #dc3545; }
 
     .rakhi-card-body { padding: 10px; }
     .rakhi-title { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 4px; height: 36px; overflow: hidden; }
@@ -98,10 +101,17 @@
     .mrp-price { font-size: 12px; color: #888; text-decoration: line-through; }
     .save-tag { font-size: 10px; color: #b30000; font-weight: bold; }
 
+    .stock-text-customer {
+      font-size: 11px; font-weight: bold; margin-top: 4px; color: #555;
+    }
+
     .order-now-btn {
       width: 100%; background: var(--primary-color);
       color: white; border: none; padding: 8px; font-weight: bold;
       border-radius: 6px; margin-top: 8px; cursor: pointer; font-size: 12px;
+    }
+    .order-now-btn:disabled {
+      background: #ccc; cursor: not-allowed;
     }
 
     .admin-btns { display: flex; justify-content: space-between; margin-top: 6px; gap: 4px; }
@@ -209,6 +219,7 @@
         <img id="modalRakhiImage" src="" style="width:100%; max-height:140px; object-fit:contain;">
         <h3 id="modalRakhiTitle" style="color:var(--primary-color); margin:6px 0 2px;"></h3>
         <p id="modalRakhiPrice" style="font-size:16px; font-weight:800; color:#28a745; margin:0;"></p>
+        <p id="modalRakhiStock" style="font-size:12px; font-weight:bold; color:#e65c00; margin:4px 0 0;"></p>
       </div>
       <hr style="border:0.5px solid #eee; margin:10px 0;">
       <h4 style="margin:0 0 6px;">ऑर्डरसाठी माहिती भरा:</h4>
@@ -376,9 +387,19 @@
       if (Object.keys(data).length > 0) {
         Object.keys(data).forEach(key => {
           const item = data[key];
-          const isOut = item.stock <= 0;
-          const isLowStock = item.stock > 0 && item.stock <= 3;
+          const stockNum = item.stock;
+          const isOut = stockNum <= 0;
+          const isLowStock = stockNum > 0 && stockNum <= 3;
           
+          let stockBadgeHTML = '';
+          if (isOut) {
+            stockBadgeHTML = `<span class="badge-stock stock-out">Out of Stock</span>`;
+          } else if (isLowStock) {
+            stockBadgeHTML = `<span class="badge-stock stock-low">🔥 फक्त ${stockNum} शिल्लक!</span>`;
+          } else {
+            stockBadgeHTML = `<span class="badge-stock stock-in">🟢 साठा: ${stockNum} नग</span>`;
+          }
+
           const realMRP = Math.round(item.price * 1.20); 
           const discountAmt = realMRP - item.price;
 
@@ -387,8 +408,7 @@
           card.innerHTML = `
             <div class="img-container">
               <span class="badge-trending">खास निवड</span>
-              ${isOut ? '<span class="badge-low-stock" style="background:red;">Out of Stock</span>' : ''}
-              ${isLowStock ? `<span class="badge-low-stock">फक्त ${item.stock} शिल्लक!</span>` : ''}
+              ${stockBadgeHTML}
               <img src="${item.image}" onclick="openRakhiModalByCard('${key}')" onerror="this.src='https://via.placeholder.com/200?text=Rakhi'">
             </div>
             <div class="rakhi-card-body">
@@ -398,7 +418,10 @@
                 <span class="mrp-price">M.R.P: ₹${realMRP}</span>
                 <span class="save-tag">(₹${discountAmt} बचत)</span>
               </div>
-              <button class="order-now-btn" onclick="openRakhiModalByCard('${key}')">
+              <div class="stock-text-customer">
+                ${isOut ? '<span style="color:red;">सध्या उपलब्ध नाही</span>' : `उपलब्ध साठा: <b>${stockNum} नग</b>`}
+              </div>
+              <button class="order-now-btn" ${isOut ? 'disabled' : ''} onclick="openRakhiModalByCard('${key}')">
                 ${isOut ? 'Out of Stock' : '🛒 आताच खरेदी करा'}
               </button>
               <div class="admin-btns">
@@ -428,6 +451,7 @@
         document.getElementById("modalRakhiImage").src = item.image;
         document.getElementById("modalRakhiTitle").innerText = item.name;
         document.getElementById("modalRakhiPrice").innerText = "किंमत: ₹" + item.price;
+        document.getElementById("modalRakhiStock").innerText = "उपलब्ध साठा: " + item.stock + " नग";
         document.getElementById("orderModal").style.display = "flex";
       }
     };
@@ -468,7 +492,7 @@
       const note = document.getElementById("custNote").value.trim();
 
       if (!name || !address || !qty || !phone) return alert("कृपया सर्व माहिती भरा!");
-      if (qty > selectedRakhi.stock) return alert("साठ्यापेक्षा जास्त नग टाकले आहेत!");
+      if (qty > selectedRakhi.stock) return alert("साठ्यापेक्षा जास्त नग टाकले आहेत! सध्या फक्त " + selectedRakhi.stock + " नग उपलब्ध आहेत.");
 
       const totalAmt = selectedRakhi.price * qty;
       const orderDate = new Date().toLocaleString();
