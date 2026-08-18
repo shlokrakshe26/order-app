@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>शाही राखी स्टोअर - Shahi Rakhi Store</title>
+  <title>गुरुकुल राखी विक्री २०२६</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
@@ -50,6 +50,7 @@
     .btn-primary { background: var(--primary-color); color: white; }
     .btn-outline { background: white; border: 1.5px solid var(--primary-color); color: var(--primary-color); }
     .btn-success { background: #28a745; color: white; }
+    .btn-whatsapp { background: #25D366; color: white; }
     .btn-danger { background: #dc3545; color: white; padding: 4px 8px; font-size: 11px; }
     .btn-warning { background: #ffc107; color: #000; padding: 4px 8px; font-size: 11px; }
 
@@ -131,17 +132,23 @@
       text-align: center; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     .greeting-card h3 { color: #c9184a; margin: 5px 0; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #printableBill, #printableBill * { visibility: visible; }
+      #printableBill { position: absolute; left: 0; top: 0; width: 100%; }
+    }
   </style>
 </head>
 <body>
 
   <div class="urgency-bar">
-    🚩 शाही राखी कलेक्शन - गुणवत्ता आणि विश्वासाची परंपरा!
+    🚩 गुरुकुल राखी विक्री २०२६ - गुणवत्तेची खरी परंपरा!
   </div>
 
   <header>
-    <h1>🚩 शाही राखी स्टोअर 🚩</h1>
-    <p>रक्षाबंधनासाठी आकर्षक आणि खास राख्या</p>
+    <h1>🚩 गुरुकुल राखी विक्री २०२६ 🚩</h1>
+    <p>रक्षाबंधनासाठी आकर्षक आणि खास राख्यांचे संकलन</p>
   </header>
 
   <div class="container">
@@ -153,7 +160,7 @@
     <div class="trust-badges">
       <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> १००% सुरक्षित</div>
       <div class="trust-item"><i class="fa-solid fa-truck-fast"></i> जलद डिलिव्हरी</div>
-      <div class="trust-item"><i class="fa-solid fa-award"></i> बेस्ट क्वालिटी</div>
+      <div class="trust-item"><i class="fa-solid fa-award"></i> उत्कृष्ट दर्जा</div>
     </div>
 
     <button class="btn btn-primary" style="width:100%; margin-bottom: 12px;" onclick="checkPasswordAndOpenUpload()">
@@ -207,8 +214,9 @@
       <h4 style="margin:0 0 6px;">ऑर्डरसाठी माहिती भरा:</h4>
       <input type="text" id="custName" placeholder="तुमचे नाव">
       <textarea id="custAddress" placeholder="पूर्ण पत्ता" rows="2"></textarea>
-      <input type="number" id="custQty" placeholder="नग संख्या" value="1" min="1" onchange="calculateModalTotal()">
+      <input type="number" id="custQty" placeholder="नग संख्या" value="1" min="1">
       <input type="tel" id="custPhone" placeholder="मोबाईल नंबर">
+      <textarea id="custNote" placeholder="विशेष संदेश / राखीसोबत पाठवायचा मेसेज (ऐच्छिक)" rows="2"></textarea>
       <button class="btn btn-success" style="width:100%; font-size:14px;" onclick="placeOrder()">🛍️ ऑर्डर कन्फर्म करा</button>
     </div>
   </div>
@@ -223,7 +231,7 @@
       <!-- Bill -->
       <div class="bill-box" id="printableBill">
         <div class="bill-header">
-          <b style="font-size:15px; color:var(--primary-color);">🚩 शाही राखी स्टोअर 🚩</b><br>
+          <b style="font-size:15px; color:var(--primary-color);">🚩 गुरुकुल राखी विक्री २०२६ 🚩</b><br>
           <small>ऑर्डर पावती (Invoice)</small>
         </div>
         <div id="billDetails"></div>
@@ -236,7 +244,12 @@
         <p style="font-size:11px; font-style:italic; color:#c9184a;">"रेशमाच्या धाग्यात जपलाय प्रेमाचा साठा, भाऊ-बहिणीच्या नात्याला उदंड उदंड आयुरारोग्य आणि सुख लाभो!"</p>
       </div>
 
-      <button class="btn btn-primary" style="width:100%; margin-top:15px;" onclick="closeModal('successModal')">ठीक आहे</button>
+      <div style="display:flex; gap:8px; margin-top:15px;">
+        <button class="btn btn-whatsapp" id="whatsappShareBtn"><i class="fa-brands fa-whatsapp"></i> WhatsApp वर पाठवा</button>
+        <button class="btn btn-outline" onclick="window.print()"><i class="fa-solid fa-print"></i> बिल प्रिंट करा</button>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%; margin-top:10px;" onclick="closeModal('successModal')">बंद करा</button>
     </div>
   </div>
 
@@ -357,7 +370,6 @@
       renderRakhis(allRakhisData);
     });
 
-    // Realistic Price Math Calculation (15% to 20% Higher Realistic MRP)
     function renderRakhis(data) {
       const container = document.getElementById("rakhiContainer");
       container.innerHTML = "";
@@ -367,7 +379,6 @@
           const isOut = item.stock <= 0;
           const isLowStock = item.stock > 0 && item.stock <= 3;
           
-          // Realistic MRP: 20% higher rounded off properly
           const realMRP = Math.round(item.price * 1.20); 
           const discountAmt = realMRP - item.price;
 
@@ -375,7 +386,7 @@
           card.className = "rakhi-card";
           card.innerHTML = `
             <div class="img-container">
-              <span class="badge-trending">प्रीमियम</span>
+              <span class="badge-trending">खास निवड</span>
               ${isOut ? '<span class="badge-low-stock" style="background:red;">Out of Stock</span>' : ''}
               ${isLowStock ? `<span class="badge-low-stock">फक्त ${item.stock} शिल्लक!</span>` : ''}
               <img src="${item.image}" onclick="openRakhiModalByCard('${key}')" onerror="this.src='https://via.placeholder.com/200?text=Rakhi'">
@@ -448,12 +459,13 @@
       } else alert("चुकीचा पासवर्ड!");
     };
 
-    // Place Order & Generate Bill + Greeting Card
+    // Place Order
     window.placeOrder = function() {
       const name = document.getElementById("custName").value.trim();
       const address = document.getElementById("custAddress").value.trim();
       const qty = Number(document.getElementById("custQty").value.trim());
       const phone = document.getElementById("custPhone").value.trim();
+      const note = document.getElementById("custNote").value.trim();
 
       if (!name || !address || !qty || !phone) return alert("कृपया सर्व माहिती भरा!");
       if (qty > selectedRakhi.stock) return alert("साठ्यापेक्षा जास्त नग टाकले आहेत!");
@@ -463,7 +475,7 @@
 
       push(ref(database, 'orders'), {
         rakhiName: selectedRakhi.name, price: selectedRakhi.price,
-        customerName: name, address, quantity: qty, phone,
+        customerName: name, address, quantity: qty, phone, note,
         totalAmount: totalAmt, orderDate: orderDate
       }).then(() => {
         update(ref(database, 'rakhis/' + selectedRakhiKey), { stock: selectedRakhi.stock - qty });
@@ -473,7 +485,9 @@
         document.getElementById("billDetails").innerHTML = `
           <b>ग्राहक:</b> ${name}<br>
           <b>मोबाईल:</b> ${phone}<br>
-          <b>पत्ता:</b> ${address}<br><br>
+          <b>पत्ता:</b> ${address}<br>
+          ${note ? `<b>विशेष संदेश:</b> <i>"${note}"</i><br>` : ''}
+          <br>
           <b>आयटम:</b> ${selectedRakhi.name} (${qty} नग)<br>
           <b>दर:</b> ₹${selectedRakhi.price} प्रति नग<br>
           <hr style="border:0.5px solid #ccc; margin:5px 0;">
@@ -482,7 +496,13 @@
         `;
 
         // Set Greeting Card Details
-        document.getElementById("greetingText").innerText = `प्रिय ${name}, 'शाही राखी स्टोअर' कडून तुम्हाला आणि तुमच्या कुटुंबाला रक्षाबंधनाच्या हार्दिक शुभेच्छा!`;
+        document.getElementById("greetingText").innerText = `प्रिय ${name}, 'गुरुकुल राखी विक्री २०२६' कडून तुम्हाला रक्षाबंधनाचे मनःपूर्वक शुभेच्छा!`;
+
+        // Setup WhatsApp Share Link
+        const waText = encodeURIComponent(`🚩 *गुरुकुल राखी विक्री २०२६ - ऑर्डर बिल* 🚩\n\n*ग्राहक:* ${name}\n*राखी:* ${selectedRakhi.name} (${qty} नग)\n*एकूण बिल:* ₹${totalAmt}\n\n✨ *रक्षाबंधन शुभेच्छा!* ✨`);
+        document.getElementById("whatsappShareBtn").onclick = () => {
+          window.open(`https://api.whatsapp.com/send?text=${waText}`, '_blank');
+        };
 
         document.getElementById("successModal").style.display = "flex";
       });
@@ -515,7 +535,7 @@
         if (data) {
           Object.keys(data).forEach(key => {
             const o = data[key];
-            list.innerHTML += `<div style="background:#f9f9f9; border-left:4px solid var(--primary-color); padding:8px; margin-bottom:8px; font-size:12px;"><b>ग्राहक:</b> ${o.customerName} (${o.phone})<br><b>राखी:</b> ${o.rakhiName} (${o.quantity} नग)<br><b>एकूण:</b> ₹${o.totalAmount}<br><b>पत्ता:</b> ${o.address}</div>`;
+            list.innerHTML += `<div style="background:#f9f9f9; border-left:4px solid var(--primary-color); padding:8px; margin-bottom:8px; font-size:12px;"><b>ग्राहक:</b> ${o.customerName} (${o.phone})<br><b>राखी:</b> ${o.rakhiName} (${o.quantity} नग)<br><b>एकूण:</b> ₹${o.totalAmount}<br><b>पत्ता:</b> ${o.address}${o.note ? `<br><b>मेसेज:</b> ${o.note}` : ''}</div>`;
           });
         } else list.innerHTML = "<p>एकही ऑर्डर नाही.</p>";
       }, { onlyOnce: true });
