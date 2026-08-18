@@ -91,7 +91,6 @@
       <h3>नवीन राखी जोडा</h3>
       <input type="file" id="uploadImageFile" accept="image/*" onchange="previewFileImage(event)">
       <input type="text" id="uploadName" placeholder="राखीचे नाव">
-      <textarea id="uploadDesc" placeholder="राखीचे वर्णन" rows="2"></textarea>
       <input type="number" id="uploadPrice" placeholder="किंमत (₹)">
       <input type="number" id="uploadStock" placeholder="स्टॉक/साठा (नग संख्या)">
       <button class="btn btn-success" style="width:100%; margin-top:10px;" onclick="uploadRakhiToFirebase()">Firebase वर अपलोड करा</button>
@@ -104,7 +103,6 @@
       <span class="close-btn" onclick="closeModal('orderModal')">&times;</span>
       <img id="modalRakhiImage" src="" alt="Rakhi">
       <h3 id="modalRakhiTitle" style="color:#b30000; margin:5px 0;"></h3>
-      <p id="modalRakhiDesc" style="font-size:12px; color:#555; margin:0;"></p>
       <p id="modalRakhiPrice" style="font-size:16px; font-weight:bold; color:#28a745; margin:4px 0;"></p>
       <p id="modalRakhiStock" style="font-size:12px; color:#e65c00; font-weight:bold;"></p>
       <hr>
@@ -193,10 +191,9 @@
       }
     };
 
-    // Upload Rakhi With Stock
+    // Upload Rakhi Without Description
     window.uploadRakhiToFirebase = function() {
       const name = document.getElementById("uploadName").value.trim();
-      const desc = document.getElementById("uploadDesc").value.trim() || "सुंदर राखी.";
       const price = document.getElementById("uploadPrice").value.trim();
       const stock = document.getElementById("uploadStock").value.trim();
       const image = base64Image || "https://via.placeholder.com/200?text=Rakhi";
@@ -204,11 +201,10 @@
       if (!name || !price || !stock) return alert("कृपया नाव, किंमत आणि स्टॉक टाका!");
 
       push(ref(database, 'rakhis'), { 
-        name, desc, price: Number(price), stock: Number(stock), image, timestamp: Date.now() 
+        name, price: Number(price), stock: Number(stock), image, timestamp: Date.now() 
       }).then(() => {
         alert("राखी अपलोड झाली!");
         document.getElementById("uploadName").value = "";
-        document.getElementById("uploadDesc").value = "";
         document.getElementById("uploadPrice").value = "";
         document.getElementById("uploadStock").value = "";
         document.getElementById("uploadImageFile").value = "";
@@ -219,7 +215,7 @@
 
     // Delete Rakhi Function (With Password 0000)
     window.deleteRakhi = function(key, event) {
-      event.stopPropagation(); // Card Click पासून वाचवण्यासाठी
+      event.stopPropagation();
       if (prompt("राखी डिलीट करण्यासाठी ॲडमिन पासवर्ड टाका:") === "0000") {
         if (confirm("तुम्हाला ही राखी खरंच काढून टाकायची आहे का?")) {
           remove(ref(database, 'rakhis/' + key))
@@ -272,7 +268,6 @@
       selectedRakhiKey = key;
       document.getElementById("modalRakhiImage").src = rakhi.image;
       document.getElementById("modalRakhiTitle").innerText = rakhi.name;
-      document.getElementById("modalRakhiDesc").innerText = rakhi.desc || "";
       document.getElementById("modalRakhiPrice").innerText = "किंमत: ₹" + rakhi.price;
       document.getElementById("modalRakhiStock").innerText = "उपलब्ध साठा: " + rakhi.stock + " नग";
       document.getElementById("orderModal").style.display = "flex";
