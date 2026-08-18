@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>गुरुकुल राखी विक्री २०२६</title>
+  <title>ज्ञानप्रबोधिनी गुरुकुल राखी विक्री २०२६</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
@@ -35,7 +35,7 @@
       box-shadow: 0 4px 15px rgba(0,0,0,0.15);
       border-bottom: 3px solid var(--secondary-color);
     }
-    header h1 { margin: 0; font-size: 24px; font-weight: 800; }
+    header h1 { margin: 0; font-size: 22px; font-weight: 800; }
     header p { margin: 4px 0 0; font-size: 12px; color: var(--secondary-color); }
 
     .container { max-width: 650px; margin: 0 auto; padding: 0 12px; }
@@ -153,11 +153,11 @@
 <body>
 
   <div class="urgency-bar">
-    🚩 गुरुकुल राखी विक्री २०२६ - गुणवत्तेची खरी परंपरा!
+    🚩 ज्ञानप्रबोधिनी गुरुकुल राखी विक्री २०२६ - गुणवत्तेची खरी परंपरा!
   </div>
 
   <header>
-    <h1>🚩 गुरुकुल राखी विक्री २०२६ 🚩</h1>
+    <h1>🚩 ज्ञानप्रबोधिनी गुरुकुल राखी विक्री २०२६ 🚩</h1>
     <p>रक्षाबंधनासाठी आकर्षक आणि खास राख्यांचे संकलन</p>
   </header>
 
@@ -242,7 +242,7 @@
       <!-- Bill -->
       <div class="bill-box" id="printableBill">
         <div class="bill-header">
-          <b style="font-size:15px; color:var(--primary-color);">🚩 गुरुकुल राखी विक्री २०२६ 🚩</b><br>
+          <b style="font-size:15px; color:var(--primary-color);">🚩 ज्ञानप्रबोधिनी गुरुकुल राखी विक्री २०२६ 🚩</b><br>
           <small>ऑर्डर पावती (Invoice)</small>
         </div>
         <div id="billDetails"></div>
@@ -520,10 +520,10 @@
         `;
 
         // Set Greeting Card Details
-        document.getElementById("greetingText").innerText = `प्रिय ${name}, 'गुरुकुल राखी विक्री २०२६' कडून तुम्हाला रक्षाबंधनाचे मनःपूर्वक शुभेच्छा!`;
+        document.getElementById("greetingText").innerText = `प्रिय ${name}, 'ज्ञानप्रबोधिनी गुरुकुल राखी विक्री २०२६' कडून तुम्हाला रक्षाबंधनाचे मनःपूर्वक शुभेच्छा!`;
 
         // Setup WhatsApp Share Link
-        const waText = encodeURIComponent(`🚩 *गुरुकुल राखी विक्री २०२६ - ऑर्डर बिल* 🚩\n\n*ग्राहक:* ${name}\n*राखी:* ${selectedRakhi.name} (${qty} नग)\n*एकूण बिल:* ₹${totalAmt}\n\n✨ *रक्षाबंधन शुभेच्छा!* ✨`);
+        const waText = encodeURIComponent(`🚩 *ज्ञानप्रबोधिनी गुरुकुल राखी विक्री २०२६ - ऑर्डर बिल* 🚩\n\n*ग्राहक:* ${name}\n*राखी:* ${selectedRakhi.name} (${qty} नग)\n*एकूण बिल:* ₹${totalAmt}\n\n✨ *रक्षाबंधन शुभेच्छा!* ✨`);
         document.getElementById("whatsappShareBtn").onclick = () => {
           window.open(`https://api.whatsapp.com/send?text=${waText}`, '_blank');
         };
