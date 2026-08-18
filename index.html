@@ -1,555 +1,286 @@
 <!DOCTYPE html>
 <html lang="mr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>राखी स्टोअर - Pro Business App</title>
-    <script type="module">
-  import { getDatabase } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
-</script>
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #2d3436;
-            display: flex;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 480px;
-            background: #ffffff;
-            min-height: 100vh;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        header {
-            background: linear-gradient(45deg, #ff416c, #ff4b2b);
-            color: #fff;
-            padding: 20px 15px;
-            text-align: center;
-            font-size: 1.4rem;
-            font-weight: 700;
-            box-shadow: 0 4px 12px rgba(255, 65, 108, 0.3);
-            letter-spacing: 0.5px;
-        }
-
-        .actions {
-            padding: 15px;
-            display: flex;
-            gap: 10px;
-            background: #fff;
-        }
-
-        .btn {
-            background: linear-gradient(45deg, #ff416c, #ff4b2b);
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            flex: 1;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(235, 77, 75, 0.3);
-            transition: all 0.2s ease;
-        }
-
-        .btn-secondary {
-            background: linear-gradient(45deg, #0984e3, #74b9ff);
-            box-shadow: 0 4px 10px rgba(9, 132, 227, 0.3);
-        }
-
-        .btn:active {
-            transform: scale(0.98);
-        }
-
-        .catalog {
-            padding: 15px;
-            flex: 1;
-            background: #f8f9fa;
-        }
-
-        .empty-catalog {
-            text-align: center;
-            color: #636e72;
-            margin-top: 60px;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        /* सुधारित प्रॉडक्ट कार्ड ग्राफिक्स */
-        .product-card {
-            border: none;
-            border-radius: 12px;
-            padding: 12px;
-            text-align: center;
-            background: #ffffff;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .product-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 130px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .product-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #2d3436;
-            margin-bottom: 3px;
-        }
-
-        .product-desc {
-            font-size: 0.75rem;
-            color: #636e72;
-            margin-bottom: 8px;
-            line-height: 1.2;
-            height: 30px;
-            overflow: hidden;
-        }
-
-        .product-price {
-            color: #00b894;
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 4px;
-        }
-
-        .product-stock {
-            font-size: 0.8rem;
-            color: #b2bec3;
-            margin-bottom: 8px;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            backdrop-filter: blur(3px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 22px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            animation: popIn 0.2s ease;
-        }
-
-        @keyframes popIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-content h3 {
-            margin-bottom: 15px;
-            color: #ff416c;
-            font-size: 1.2rem;
-        }
-
-        .form-group {
-            margin-bottom: 12px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-            color: #2d3436;
-        }
-
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1.5px solid #dfe6e9;
-            border-radius: 8px;
-            outline: none;
-            font-size: 0.9rem;
-        }
-
-        .form-group input:focus, .form-group textarea:focus {
-            border-color: #ff416c;
-        }
-
-        .close-btn {
-            background: #b2bec3;
-            box-shadow: none;
-            margin-top: 8px;
-        }
-
-        .orders-list {
-            max-height: 300px;
-            overflow-y: auto;
-            margin-bottom: 10px;
-        }
-
-        .order-item {
-            border-left: 4px solid #ff416c;
-            background: #f8f9fa;
-            border-radius: 6px;
-            padding: 10px;
-            margin-bottom: 10px;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>राखी स्टोअर - Rakhi Store</title>
+  <style>
+    :root {
+      --primary-color: #b30000;
+      --secondary-color: #ff9900;
+      --bg-color: #fff8f0;
+    }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0; padding: 0;
+      background-color: var(--bg-color);
+      color: #333;
+    }
+    header {
+      background: linear-gradient(135deg, #b30000, #e65c00);
+      color: white; text-align: center; padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    h1 { margin: 0; font-size: 28px; }
+    .subtitle { margin-top: 5px; font-size: 14px; opacity: 0.9; }
+    .container { max-width: 1000px; margin: 20px auto; padding: 0 15px; }
+    .top-bar { display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .btn {
+      background-color: var(--primary-color); color: white;
+      padding: 10px 16px; border: none; border-radius: 6px;
+      cursor: pointer; font-weight: bold; transition: 0.3s;
+    }
+    .btn:hover { background-color: #800000; }
+    .btn-success { background-color: #28a745; }
+    .btn-info { background-color: #17a2b8; }
+    .rakhi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+    .rakhi-card {
+      background: white; border-radius: 10px; overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08); text-align: center; cursor: pointer;
+    }
+    .rakhi-card img { width: 100%; height: 180px; object-fit: cover; }
+    .rakhi-card-body { padding: 15px; }
+    .rakhi-title { font-size: 18px; font-weight: bold; color: #b30000; }
+    .rakhi-price { font-size: 16px; color: #28a745; font-weight: bold; }
+    .modal {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
+    }
+    .modal-content {
+      background: white; padding: 25px; border-radius: 10px;
+      width: 90%; max-width: 480px; max-height: 85vh; overflow-y: auto; position: relative;
+    }
+    .close-btn { position: absolute; right: 15px; top: 10px; font-size: 24px; cursor: pointer; }
+    .modal img { width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; }
+    input, textarea { width: 100%; padding: 10px; margin: 8px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+    .order-card { background: #f9f9f9; border-left: 4px solid #b30000; padding: 10px; margin-bottom: 10px; border-radius: 4px; font-size: 14px; }
+  </style>
 </head>
 <body>
 
-<div class="app-container">
-    <header>
-        ✨ राखी स्टोअर ✨
-    </header>
+  <header>
+    <h1>🚩 राखी कलेक्शन स्टोअर 🚩</h1>
+    <p class="subtitle">तुमच्या आवडत्या राख्या ऑनलाइन ऑर्डर करा</p>
+  </header>
 
-    <div class="actions">
-        <button class="btn" onclick="openModal('uploadModal')">➕ Upload Rakhi</button>
-        <button class="btn btn-secondary" onclick="openModal('ordersModal')">📋 Orders</button>
+  <div class="container">
+    <div class="top-bar">
+      <div>
+        <button class="btn btn-info" onclick="openMyOrdersModal()">📦 माझी ऑर्डर पहा</button>
+        <button class="btn" onclick="checkPasswordAndOpenAllOrders()">📋 सर्व ऑर्डर्स (Admin)</button>
+      </div>
+      <button class="btn btn-success" onclick="checkPasswordAndOpenUpload()">+ राखी अपलोड करा (Admin)</button>
     </div>
 
-    <div class="catalog">
-        <div id="emptyMessage" class="empty-catalog">
-            सध्या एकही राखी उपलब्ध नाही.<br>
-            ('Upload Rakhi' वर क्लिक करून फोटो निवडा)
-        </div>
-        <div class="product-grid" id="productGrid"></div>
-    </div>
-</div>
+    <h2>उपलब्ध राख्या</h2>
+    <div id="rakhiContainer" class="rakhi-grid"><p>राख्या लोड होत आहेत...</p></div>
+  </div>
 
-<!-- 1. Upload Rakhi Modal -->
-<div class="modal" id="uploadModal">
+  <!-- Upload Modal -->
+  <div id="uploadModal" class="modal">
     <div class="modal-content">
-        <h3>नवीन राखी अपलोड करा</h3>
-        <div class="form-group">
-            <label>१. राखीचा फोटो निवडा:</label>
-            <!-- ऑन-चेंजवर ऑटोमॅटिक डिटेल्स भरले जातील -->
-            <input type="file" id="rakhiImage" accept="image/*" onchange="autoFillDetails(this)">
-        </div>
-        <div class="form-group">
-            <label>राखीचे नाव (ऑटो-जनरेटेड):</label>
-            <input type="text" id="rakhiName" placeholder="फोटो निवडल्यावर ऑटो-येईल">
-        </div>
-        <div class="form-group">
-            <label>वर्णन / Description (ऑटो-जनरेटेड):</label>
-            <textarea id="rakhiDesc" rows="2" placeholder="फोटो निवडल्यावर ऑटो-येईल"></textarea>
-        </div>
-        <div class="form-group">
-            <label>किंमत (₹):</label>
-            <input type="number" id="rakhiPrice" value="120">
-        </div>
-        <div class="form-group">
-            <label>स्टॉक (Stock):</label>
-            <input type="number" id="rakhiStock" value="10">
-        </div>
-        <button class="btn" onclick="uploadRakhi()">अपलोड करा</button>
-        <button class="btn close-btn" onclick="closeModal('uploadModal')">रद्द करा</button>
+      <span class="close-btn" onclick="closeModal('uploadModal')">&times;</span>
+      <h3>नवीन राखी जोडा</h3>
+      <input type="text" id="uploadName" placeholder="राखीचे नाव">
+      <input type="number" id="uploadPrice" placeholder="किंमत (₹)">
+      <input type="text" id="uploadImage" placeholder="फोटोची Link (Image URL)">
+      <button class="btn btn-success" style="width:100%; margin-top:10px;" onclick="uploadRakhiToFirebase()">Firebase वर अपलोड करा</button>
     </div>
-</div>
+  </div>
 
-<!-- 2. Order Form Modal -->
-<div class="modal" id="orderModal">
+  <!-- Order Placement Modal -->
+  <div id="orderModal" class="modal">
     <div class="modal-content">
-        <h3>ऑर्डर फॉर्म</h3>
-        <p id="selectedRakhiInfo" style="margin-bottom: 10px; font-weight: bold; color: #00b894;"></p>
-        <div class="form-group">
-            <label>तुमचे नाव:</label>
-            <input type="text" id="custName" placeholder="पूर्ण नाव टाका">
-        </div>
-        <div class="form-group">
-            <label>मोबाइल नंबर:</label>
-            <input type="tel" id="custPhone" placeholder="10 अंकी मोबाईल नंबर">
-        </div>
-        <div class="form-group">
-            <label>पूर्ण पत्ता:</label>
-            <textarea id="custAddress" rows="3" placeholder="घर क्र., परिसर, पिनकोड"></textarea>
-        </div>
-        <button class="btn" onclick="submitOrder()">ऑर्डर कन्फर्म करा</button>
-        <button class="btn close-btn" onclick="closeModal('orderModal')">रद्द करा</button>
+      <span class="close-btn" onclick="closeModal('orderModal')">&times;</span>
+      <img id="modalRakhiImage" src="" alt="Rakhi">
+      <h3 id="modalRakhiTitle" style="color:#b30000; margin:5px 0;"></h3>
+      <p id="modalRakhiPrice" style="font-size:18px; font-weight:bold; color:#28a745; margin:5px 0;"></p>
+      <hr>
+      <h4>ऑर्डरसाठी माहिती भरा:</h4>
+      <input type="text" id="custName" placeholder="तुमचे पूर्ण नाव">
+      <textarea id="custAddress" placeholder="पूर्ण पत्ता (Address)" rows="2"></textarea>
+      <input type="number" id="custQty" placeholder="नग (Quantity)" value="1" min="1">
+      <input type="tel" id="custPhone" placeholder="मोबाईल नंबर">
+      <button class="btn btn-success" style="width:100%; margin-top:10px;" onclick="placeOrder()">ऑर्डर कन्फर्म करा</button>
     </div>
-</div>
+  </div>
 
-<!-- 3. Orders View Modal -->
-<div class="modal" id="ordersModal">
+  <!-- My Orders Modal -->
+  <div id="myOrdersModal" class="modal">
     <div class="modal-content">
-        <h3>ऑर्डर डिटेल्स</h3>
-        <div class="orders-list" id="ordersList">
-            <p style="text-align: center; color: #888;">अजून एकही ऑर्डर आलेली नाही.</p>
-        </div>
-        <button class="btn close-btn" onclick="closeModal('ordersModal')">बंद करा</button>
+      <span class="close-btn" onclick="closeModal('myOrdersModal')">&times;</span>
+      <h3>माझी ऑर्डर शोधा</h3>
+      <input type="tel" id="searchPhone" placeholder="ऑर्डर करताना टाकलेला मोबाईल नंबर">
+      <button class="btn btn-info" style="width:100%;" onclick="fetchMyOrders()">ऑर्डर शोधा</button>
+      <div id="myOrdersList" style="margin-top:15px;"></div>
     </div>
-</div>
+  </div>
 
-<script>
-    let products = JSON.parse(localStorage.getItem('rakhi_products')) || [];
-    let orders = JSON.parse(localStorage.getItem('rakhi_orders')) || [];
-    let currentSelectedRakhi = null;
+  <!-- All Orders Modal (Admin) -->
+  <div id="allOrdersModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('allOrdersModal')">&times;</span>
+      <h3>सर्व ग्राहकांच्या ऑर्डर्स (Admin View)</h3>
+      <div id="allOrdersList" style="margin-top:15px;"><p>ऑर्डर्स लोड होत आहेत...</p></div>
+    </div>
+  </div>
 
-    window.onload = function() {
-        renderProducts();
-        updateOrdersListUI();
+  <!-- Firebase Script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // integrated Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyANVkGgaGr_A8M-9DsgfE3YSEAwQ5aGTRM",
+      authDomain: "order-app-c0c38.firebaseapp.com",
+      databaseURL: "https://order-app-c0c38-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "order-app-c0c38",
+      storageBucket: "order-app-c0c38.firebasestorage.app",
+      messagingSenderId: "16039614346",
+      appId: "1:16039614346:web:46fc8a3afb5d0bd98bda73",
+      measurementId: "G-XYH5G6T5KR"
     };
 
-    function openModal(id) {
-        document.getElementById(id).style.display = 'flex';
-    }
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    let selectedRakhi = null;
 
-    function closeModal(id) {
-        document.getElementById(id).style.display = 'none';
-    }
+    window.closeModal = id => document.getElementById(id).style.display = "none";
 
-    // ✨ ऑटोमॅटिकली फोटोवरून नाव व डिस्क्रिप्शन जनरेट करणारे नवीन फंक्शन
-    function autoFillDetails(input) {
-        if (input.files && input.files[0]) {
-            const fileName = input.files[0].name.toLowerCase();
-            
-            let name = "प्रीमियम डिझायनर राखी";
-            let desc = "सुंदर रेशमी धागा आणि नक्षीकाम असलेली विशेष राखी.";
+    window.checkPasswordAndOpenUpload = function() {
+      if (prompt("ॲडमिन पासवर्ड टाका:") === "0000") {
+        document.getElementById("uploadModal").style.display = "flex";
+      } else alert("चुकीचा पासवर्ड!");
+    };
 
-            if (fileName.includes("kundu") || fileName.includes("pearl")) {
-                name = "पर्ल अँड कुंदन राखी";
-                desc = "मोती आणि चमकदार कुंदन कामाची आकर्षक डिझाइन.";
-            } else if (fileName.includes("kids") || fileName.includes("cartoon")) {
-                name = "किड्स स्पेशल राखी";
-                desc = "लहान मुलांसाठी खास आणि आकर्षक कार्टून राखी.";
-            } else if (fileName.includes("silver") || fileName.includes("zari")) {
-                name = "रॉयल सिल्व्हर झरी राखी";
-                desc = "शाही लुक देणारी चंदेरी झरी वर्क राखी.";
-            } else if (fileName.includes("rudraksh")) {
-                name = "स्पिरिच्युअल रुद्राक्ष राखी";
-                desc = "पवित्र रुद्राक्ष मनी आणि रेशमी धागा.";
+    window.checkPasswordAndOpenAllOrders = function() {
+      if (prompt("ॲडमिन पासवर्ड टाका:") === "0000") {
+        document.getElementById("allOrdersModal").style.display = "flex";
+        loadAllOrders();
+      } else alert("चुकीचा पासवर्ड!");
+    };
+
+    window.openMyOrdersModal = function() {
+      document.getElementById("myOrdersModal").style.display = "flex";
+      document.getElementById("myOrdersList").innerHTML = "";
+    };
+
+    // Upload Rakhi
+    window.uploadRakhiToFirebase = function() {
+      const name = document.getElementById("uploadName").value.trim();
+      const price = document.getElementById("uploadPrice").value.trim();
+      let image = document.getElementById("uploadImage").value.trim() || "https://via.placeholder.com/200?text=Rakhi";
+
+      if (!name || !price) return alert("कृपया नाव आणि किंमत टाका!");
+
+      push(ref(database, 'rakhis'), { name, price: Number(price), image, timestamp: Date.now() })
+        .then(() => {
+          alert("राखी अपलोड झाली!");
+          closeModal("uploadModal");
+        }).catch(err => alert("एरर: " + err.message));
+    };
+
+    // Load Rakhis Grid
+    onValue(ref(database, 'rakhis'), snapshot => {
+      const container = document.getElementById("rakhiContainer");
+      container.innerHTML = "";
+      const data = snapshot.val();
+      if (data) {
+        Object.keys(data).forEach(key => {
+          const item = data[key];
+          const card = document.createElement("div");
+          card.className = "rakhi-card";
+          card.onclick = () => openOrderModal(item);
+          card.innerHTML = `
+            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/200?text=Rakhi'">
+            <div class="rakhi-card-body">
+              <div class="rakhi-title">${item.name}</div>
+              <div class="rakhi-price">₹${item.price}</div>
+            </div>`;
+          container.appendChild(card);
+        });
+      } else container.innerHTML = "<p>राखी उपलब्ध नाही.</p>";
+    });
+
+    window.openOrderModal = function(rakhi) {
+      selectedRakhi = rakhi;
+      document.getElementById("modalRakhiImage").src = rakhi.image;
+      document.getElementById("modalRakhiTitle").innerText = rakhi.name;
+      document.getElementById("modalRakhiPrice").innerText = "किंमत: ₹" + rakhi.price;
+      document.getElementById("orderModal").style.display = "flex";
+    };
+
+    // Place Order
+    window.placeOrder = function() {
+      const name = document.getElementById("custName").value.trim();
+      const address = document.getElementById("custAddress").value.trim();
+      const qty = document.getElementById("custQty").value.trim();
+      const phone = document.getElementById("custPhone").value.trim();
+
+      if (!name || !address || !qty || !phone) return alert("सर्व माहिती भरा!");
+
+      push(ref(database, 'orders'), {
+        rakhiName: selectedRakhi.name, price: selectedRakhi.price,
+        customerName: name, address, quantity: Number(qty), phone,
+        totalAmount: selectedRakhi.price * Number(qty), orderDate: new Date().toLocaleString()
+      }).then(() => {
+        alert("ऑर्डर यशस्वी झाली!");
+        closeModal("orderModal");
+      }).catch(err => alert("एरर: " + err.message));
+    };
+
+    // Fetch Individual Customer Orders
+    window.fetchMyOrders = function() {
+      const phone = document.getElementById("searchPhone").value.trim();
+      if (!phone) return alert("मोबाईल नंबर टाका!");
+
+      onValue(ref(database, 'orders'), snapshot => {
+        const list = document.getElementById("myOrdersList");
+        list.innerHTML = "";
+        const data = snapshot.val();
+        let found = false;
+
+        if (data) {
+          Object.keys(data).forEach(key => {
+            const order = data[key];
+            if (order.phone === phone) {
+              found = true;
+              list.innerHTML += `
+                <div class="order-card">
+                  <b>राखी:</b> ${order.rakhiName} (${order.quantity} नग)<br>
+                  <b>एकूण बिल:</b> ₹${order.totalAmount}<br>
+                  <b>तारीख:</b> ${order.orderDate}
+                </div>`;
             }
-
-            document.getElementById('rakhiName').value = name;
-            document.getElementById('rakhiDesc').value = desc;
+          });
         }
+        if (!found) list.innerHTML = "<p>या नंबरवर कोणतीही ऑर्डर सापडली नाही.</p>";
+      }, { onlyOnce: true });
+    };
+
+    // Load All Orders for Admin
+    function loadAllOrders() {
+      onValue(ref(database, 'orders'), snapshot => {
+        const list = document.getElementById("allOrdersList");
+        list.innerHTML = "";
+        const data = snapshot.val();
+
+        if (data) {
+          Object.keys(data).forEach(key => {
+            const order = data[key];
+            list.innerHTML += `
+              <div class="order-card">
+                <b>ग्राहक:</b> ${order.customerName} (${order.phone})<br>
+                <b>राखी:</b> ${order.rakhiName} | <b>नग:</b> ${order.quantity}<br>
+                <b>एकूण रक्कम:</b> ₹${order.totalAmount}<br>
+                <b>पत्ता:</b> ${order.address}<br>
+                <small><b>तारीख:</b> ${order.orderDate}</small>
+              </div>`;
+          });
+        } else list.innerHTML = "<p>अजून एकही ऑर्डर आलेली नाही.</p>";
+      }, { onlyOnce: true });
     }
-
-    // राखी अपलोड करणे
-    function uploadRakhi() {
-        const name = document.getElementById('rakhiName').value.trim();
-        const desc = document.getElementById('rakhiDesc').value.trim();
-        const price = document.getElementById('rakhiPrice').value;
-        const stock = document.getElementById('rakhiStock').value;
-        const imageInput = document.getElementById('rakhiImage');
-
-        if (!name || !price || !stock || imageInput.files.length === 0) {
-            alert('कृपया फोटो निवडा आणि माहिती तपासा!');
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const newProduct = {
-                id: Date.now(),
-                name: name,
-                desc: desc,
-                price: parseInt(price),
-                stock: parseInt(stock),
-                image: e.target.result
-            };
-
-            products.push(newProduct);
-            saveData();
-            renderProducts();
-            closeModal('uploadModal');
-
-            // फॉर्म रीसेट
-            document.getElementById('rakhiName').value = '';
-            document.getElementById('rakhiDesc').value = '';
-            document.getElementById('rakhiPrice').value = '120';
-            document.getElementById('rakhiStock').value = '10';
-            document.getElementById('rakhiImage').value = '';
-        };
-
-        reader.readAsDataURL(imageInput.files[0]);
-    }
-
-    // प्रॉडक्ट्स डिस्प्ले करणे (सुधारित कार्ड्ससह)
-    function renderProducts() {
-        const grid = document.getElementById('productGrid');
-        const emptyMsg = document.getElementById('emptyMessage');
-
-        if (products.length === 0) {
-            emptyMsg.style.display = 'block';
-            grid.innerHTML = '';
-            return;
-        }
-
-        emptyMsg.style.display = 'none';
-        grid.innerHTML = '';
-
-        products.forEach(product => {
-            const card = document.createElement('div');
-            card.className = 'product-card';
-            
-            const isOutOfStock = product.stock <= 0;
-            
-            card.innerHTML = `
-                <div>
-                    <img src="${product.image}" alt="${product.name}">
-                    <div class="product-title">${product.name}</div>
-                    <div class="product-desc">${product.desc || ''}</div>
-                </div>
-                <div>
-                    <div class="product-price">₹${product.price}</div>
-                    <div class="product-stock" style="color: ${isOutOfStock ? '#e74c3c' : '#b2bec3'};">
-                        ${isOutOfStock ? 'आउट ऑफ स्टॉक' : 'स्टॉक: ' + product.stock}
-                    </div>
-                    <button class="btn" style="width:100%; ${isOutOfStock ? 'background:#b2bec3; box-shadow:none; cursor:not-allowed;' : ''}" 
-                        ${isOutOfStock ? 'disabled' : ''} 
-                        onclick="openOrderForm(${product.id})">
-                        ${isOutOfStock ? 'Sold Out' : 'Order Now'}
-                    </button>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    }
-
-    function openOrderForm(productId) {
-        const product = products.find(p => p.id === productId);
-        if (!product) return;
-
-        currentSelectedRakhi = product;
-        document.getElementById('selectedRakhiInfo').innerText = `राखी: ${product.name} (₹${product.price})`;
-        openModal('orderModal');
-    }
-
-    function submitOrder() {
-        const name = document.getElementById('custName').value.trim();
-        const phone = document.getElementById('custPhone').value.trim();
-        const address = document.getElementById('custAddress').value.trim();
-
-        if (!name || !phone || !address) {
-            alert('कृपया सर्व माहिती पूर्ण भरा!');
-            return;
-        }
-
-        const orderData = {
-            orderId: 'ORD-' + Math.floor(1000 + Math.random() * 9000),
-            rakhiName: currentSelectedRakhi.name,
-            price: currentSelectedRakhi.price,
-            customerName: name,
-            phone: phone,
-            address: address,
-            date: new Date().toLocaleString('mr-IN')
-        };
-
-        currentSelectedRakhi.stock -= 1;
-        orders.push(orderData);
-        saveData();
-        renderProducts();
-        updateOrdersListUI();
-
-        alert('ऑर्डर यशस्वीरीत्या नोंदवली गेली आहे!');
-
-        document.getElementById('custName').value = '';
-        document.getElementById('custPhone').value = '';
-        document.getElementById('custAddress').value = '';
-        closeModal('orderModal');
-    }
-
-    function updateOrdersListUI() {
-        const list = document.getElementById('ordersList');
-
-        if (orders.length === 0) {
-            list.innerHTML = '<p style="text-align: center; color: #888;">अजून एकही ऑर्डर आलेली नाही.</p>';
-            return;
-        }
-
-        list.innerHTML = '';
-        orders.slice().reverse().forEach(ord => {
-            const item = document.createElement('div');
-            item.className = 'order-item';
-            item.innerHTML = `
-                <strong>${ord.orderId}</strong> - <span style="color:#ff416c;">${ord.rakhiName}</span> (₹${ord.price})<br>
-                👤 <b>ग्राहक:</b> ${ord.customerName} (${ord.phone})<br>
-                📍 <b>पत्ता:</b> ${ord.address}<br>
-                🕒 <b>वेळ:</b> ${ord.date}
-            `;
-            list.appendChild(item);
-        });
-    }
-
-    function saveData() {
-        localStorage.setItem('rakhi_products', JSON.stringify(products));
-        localStorage.setItem('rakhi_orders', JSON.stringify(orders));
-    }
-   <!-- index.html च्या शेवटी </body> टॅगच्या आधी हा सुधारित कोड टाका -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-  // Tumche Firebase Configuration
-  const firebaseConfig = {
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyANVkGgaGr_A8M-9DsgfE3YSEAwQ5aGTRM",
-  authDomain: "order-app-c0c38.firebaseapp.com",
-  databaseURL: "https://order-app-c0c38-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "order-app-c0c38",
-  storageBucket: "order-app-c0c38.firebasestorage.app",
-  messagingSenderId: "16039614346",
-  appId: "1:16039614346:web:46fc8a3afb5d0bd98bda73",
-  measurementId: "G-XYH5G6T5KR"
-  };
-
-  // Firebase Initialize kara
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-
-  // Modal open ani close karnyache functions
-  window.openRakhiModal = function(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-      modal.style.display = "block";
-    }
-  };
-
-  window.closeRakhiModal = function(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-      modal.style.display = "none";
-    }
-  };
-</script>
+  </script>
 </body>
 </html>
