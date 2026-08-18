@@ -35,6 +35,7 @@
     .btn:active { opacity: 0.8; }
     .btn-success { background-color: #28a745; }
     .btn-info { background-color: #17a2b8; }
+    .btn-warning { background-color: #ffc107; padding: 4px 8px; font-size: 11px; margin-top: 6px; border-radius: 4px; border: none; color: #000; cursor: pointer; font-weight: bold; }
     .btn-danger { background-color: #dc3545; padding: 4px 8px; font-size: 11px; margin-top: 6px; border-radius: 4px; border: none; color: white; cursor: pointer; }
     
     .rakhi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -47,6 +48,7 @@
     .rakhi-title { font-size: 15px; font-weight: bold; color: #b30000; margin-bottom: 4px; cursor: pointer; }
     .rakhi-price { font-size: 14px; color: #28a745; font-weight: bold; margin-top: 4px; }
     .rakhi-stock { font-size: 11px; color: #e65c00; font-weight: bold; }
+    .admin-action-btns { display: flex; justify-content: center; gap: 5px; }
     .out-of-stock { opacity: 0.6; }
     .badge-out { position: absolute; top: 5px; right: 5px; background: red; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
 
@@ -94,6 +96,18 @@
       <input type="number" id="uploadPrice" placeholder="किंमत (₹)">
       <input type="number" id="uploadStock" placeholder="स्टॉक/साठा (नग संख्या)">
       <button class="btn btn-success" style="width:100%; margin-top:10px;" onclick="uploadRakhiToFirebase()">Firebase वर अपलोड करा</button>
+    </div>
+  </div>
+
+  <!-- Edit Rakhi Modal (Admin) -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
+      <h3>राखीची माहिती बदला (Edit)</h3>
+      <input type="text" id="editName" placeholder="राखीचे नाव">
+      <input type="number" id="editPrice" placeholder="किंमत (₹)">
+      <input type="number" id="editStock" placeholder="स्टॉक/साठा (नग संख्या)">
+      <button class="btn btn-warning" style="width:100%; margin-top:10px;" onclick="updateRakhiToFirebase()">बदल सेव्ह करा</button>
     </div>
   </div>
 
@@ -155,6 +169,7 @@
     const database = getDatabase(app);
     let selectedRakhi = null;
     let selectedRakhiKey = "";
+    let editRakhiKey = "";
     let base64Image = "";
 
     window.closeModal = id => document.getElementById(id).style.display = "none";
@@ -213,6 +228,41 @@
       }).catch(err => alert("एरर: " + err.message));
     };
 
+    // Edit Rakhi Function (With Password 0000)
+    window.openEditModal = function(key, event) {
+      event.stopPropagation();
+      if (prompt("राखी एडिट करण्यासाठी ॲडमिन पासवर्ड टाका:") === "0000") {
+        onValue(ref(database, 'rakhis/' + key), snapshot => {
+          const rakhi = snapshot.val();
+          if (rakhi) {
+            editRakhiKey = key;
+            document.getElementById("editName").value = rakhi.name;
+            document.getElementById("editPrice").value = rakhi.price;
+            document.getElementById("editStock").value = rakhi.stock;
+            document.getElementById("editModal").style.display = "flex";
+          }
+        }, { onlyOnce: true });
+      } else {
+        alert("चुकीचा पासवर्ड!");
+      }
+    };
+
+    // Update Rakhi in Firebase
+    window.updateRakhiToFirebase = function() {
+      const name = document.getElementById("editName").value.trim();
+      const price = document.getElementById("editPrice").value.trim();
+      const stock = document.getElementById("editStock").value.trim();
+
+      if (!name || !price || !stock) return alert("सर्व माहिती भरा!");
+
+      update(ref(database, 'rakhis/' + editRakhiKey), {
+        name, price: Number(price), stock: Number(stock)
+      }).then(() => {
+        alert("राखीची माहिती यशस्वीपणे बदलली!");
+        closeModal("editModal");
+      }).catch(err => alert("एरर: " + err.message));
+    };
+
     // Delete Rakhi Function (With Password 0000)
     window.deleteRakhi = function(key, event) {
       event.stopPropagation();
@@ -246,7 +296,10 @@
               <div class="rakhi-title" onclick="openRakhiModalByCard('${key}')">${item.name}</div>
               <div class="rakhi-price">₹${item.price}</div>
               <div class="rakhi-stock">साठा: ${item.stock} नग</div>
-              <button class="btn-danger" onclick="deleteRakhi('${key}', event)">🗑️ डिलीट करा</button>
+              <div class="admin-action-btns">
+                <button class="btn-warning" onclick="openEditModal('${key}', event)">✏️ एडिट</button>
+                <button class="btn-danger" onclick="deleteRakhi('${key}', event)">🗑️ डिलीट</button>
+              </div>
             </div>`;
           container.appendChild(card);
         });
