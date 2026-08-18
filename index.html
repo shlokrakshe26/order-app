@@ -35,19 +35,19 @@
     .btn:active { opacity: 0.8; }
     .btn-success { background-color: #28a745; }
     .btn-info { background-color: #17a2b8; }
+    .btn-danger { background-color: #dc3545; padding: 4px 8px; font-size: 11px; margin-top: 6px; border-radius: 4px; border: none; color: white; cursor: pointer; }
     
     .rakhi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .rakhi-card {
       background: white; border-radius: 10px; overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align: center; position: relative;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align: center; position: relative; padding-bottom: 8px;
     }
-    .rakhi-card img { width: 100%; height: 130px; object-fit: cover; }
-    .rakhi-card-body { padding: 10px; }
-    .rakhi-title { font-size: 15px; font-weight: bold; color: #b30000; margin-bottom: 4px; }
-    .rakhi-desc { font-size: 11px; color: #666; height: 28px; overflow: hidden; }
+    .rakhi-card img { width: 100%; height: 130px; object-fit: cover; cursor: pointer; }
+    .rakhi-card-body { padding: 8px; }
+    .rakhi-title { font-size: 15px; font-weight: bold; color: #b30000; margin-bottom: 4px; cursor: pointer; }
     .rakhi-price { font-size: 14px; color: #28a745; font-weight: bold; margin-top: 4px; }
     .rakhi-stock { font-size: 11px; color: #e65c00; font-weight: bold; }
-    .out-of-stock { opacity: 0.6; pointer-events: none; }
+    .out-of-stock { opacity: 0.6; }
     .badge-out { position: absolute; top: 5px; right: 5px; background: red; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
 
     .modal {
@@ -140,7 +140,7 @@
   <!-- Firebase Script -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push, onValue, update } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, push, onValue, update, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyANVkGgaGr_A8M-9DsgfE3YSEAwQ5aGTRM",
@@ -217,6 +217,20 @@
       }).catch(err => alert("एरर: " + err.message));
     };
 
+    // Delete Rakhi Function (With Password 0000)
+    window.deleteRakhi = function(key, event) {
+      event.stopPropagation(); // Card Click पासून वाचवण्यासाठी
+      if (prompt("राखी डिलीट करण्यासाठी ॲडमिन पासवर्ड टाका:") === "0000") {
+        if (confirm("तुम्हाला ही राखी खरंच काढून टाकायची आहे का?")) {
+          remove(ref(database, 'rakhis/' + key))
+            .then(() => alert("राखी काढण्यात आली आहे!"))
+            .catch(err => alert("एरर: " + err.message));
+        }
+      } else {
+        alert("चुकीचा पासवर्ड!");
+      }
+    };
+
     // Load Rakhis Grid
     onValue(ref(database, 'rakhis'), snapshot => {
       const container = document.getElementById("rakhiContainer");
@@ -228,20 +242,30 @@
           const isOut = item.stock <= 0;
           const card = document.createElement("div");
           card.className = "rakhi-card " + (isOut ? "out-of-stock" : "");
-          if(!isOut) card.onclick = () => openOrderModal(item, key);
           
           card.innerHTML = `
             ${isOut ? '<span class="badge-out">Out of Stock</span>' : ''}
-            <img src="${item.image}" onerror="this.src='https://via.placeholder.com/200?text=Rakhi'">
+            <img src="${item.image}" onclick="openRakhiModalByCard('${key}')" onerror="this.src='https://via.placeholder.com/200?text=Rakhi'">
             <div class="rakhi-card-body">
-              <div class="rakhi-title">${item.name}</div>
+              <div class="rakhi-title" onclick="openRakhiModalByCard('${key}')">${item.name}</div>
               <div class="rakhi-price">₹${item.price}</div>
               <div class="rakhi-stock">साठा: ${item.stock} नग</div>
+              <button class="btn-danger" onclick="deleteRakhi('${key}', event)">🗑️ डिलीट करा</button>
             </div>`;
           container.appendChild(card);
         });
       } else container.innerHTML = "<p>राखी उपलब्ध नाही.</p>";
     });
+
+    window.openRakhiModalByCard = function(key) {
+      onValue(ref(database, 'rakhis/' + key), snapshot => {
+        const item = snapshot.val();
+        if (item) {
+          if (item.stock <= 0) return alert("ही राखी Out of Stock झाली आहे!");
+          openOrderModal(item, key);
+        }
+      }, { onlyOnce: true });
+    };
 
     window.openOrderModal = function(rakhi, key) {
       selectedRakhi = rakhi;
