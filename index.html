@@ -42,6 +42,7 @@
     .rakhi-card-body { padding: 15px; }
     .rakhi-title { font-size: 18px; font-weight: bold; color: #b30000; }
     .rakhi-price { font-size: 16px; color: #28a745; font-weight: bold; }
+    .rakhi-desc { font-size: 13px; color: #666; margin-top: 5px; }
     .modal {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center;
@@ -81,9 +82,11 @@
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('uploadModal')">&times;</span>
       <h3>नवीन राखी जोडा</h3>
+      <label style="font-size:12px; color:#555;">फाईल मॅनेजरमधून फोटो निवडा:</label>
+      <input type="file" id="uploadImageFile" accept="image/*" onchange="previewFileImage(event)">
       <input type="text" id="uploadName" placeholder="राखीचे नाव">
+      <textarea id="uploadDesc" placeholder="राखीचे वर्णन (Description)" rows="2"></textarea>
       <input type="number" id="uploadPrice" placeholder="किंमत (₹)">
-      <input type="text" id="uploadImage" placeholder="फोटोची Link (Image URL)">
       <button class="btn btn-success" style="width:100%; margin-top:10px;" onclick="uploadRakhiToFirebase()">Firebase वर अपलोड करा</button>
     </div>
   </div>
@@ -94,6 +97,7 @@
       <span class="close-btn" onclick="closeModal('orderModal')">&times;</span>
       <img id="modalRakhiImage" src="" alt="Rakhi">
       <h3 id="modalRakhiTitle" style="color:#b30000; margin:5px 0;"></h3>
+      <p id="modalRakhiDesc" style="font-size:14px; color:#555; margin:0;"></p>
       <p id="modalRakhiPrice" style="font-size:18px; font-weight:bold; color:#28a745; margin:5px 0;"></p>
       <hr>
       <h4>ऑर्डरसाठी माहिती भरा:</h4>
@@ -130,7 +134,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // integrated Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyANVkGgaGr_A8M-9DsgfE3YSEAwQ5aGTRM",
       authDomain: "order-app-c0c38.firebaseapp.com",
@@ -145,6 +148,7 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
     let selectedRakhi = null;
+    let base64Image = "";
 
     window.closeModal = id => document.getElementById(id).style.display = "none";
 
@@ -166,19 +170,41 @@
       document.getElementById("myOrdersList").innerHTML = "";
     };
 
+    // File Manager Image Selection
+    window.previewFileImage = function(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          base64Image = e.target.result;
+          if (!document.getElementById("uploadName").value) {
+            document.getElementById("uploadName").value = file.name.split('.')[0];
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+
     // Upload Rakhi
     window.uploadRakhiToFirebase = function() {
       const name = document.getElementById("uploadName").value.trim();
+      const desc = document.getElementById("uploadDesc").value.trim() || "सुंदर आणि आकर्षक राखी.";
       const price = document.getElementById("uploadPrice").value.trim();
-      let image = document.getElementById("uploadImage").value.trim() || "https://via.placeholder.com/200?text=Rakhi";
+      const image = base64Image || "https://via.placeholder.com/200?text=Rakhi";
 
       if (!name || !price) return alert("कृपया नाव आणि किंमत टाका!");
 
-      push(ref(database, 'rakhis'), { name, price: Number(price), image, timestamp: Date.now() })
-        .then(() => {
-          alert("राखी अपलोड झाली!");
-          closeModal("uploadModal");
-        }).catch(err => alert("एरर: " + err.message));
+      push(ref(database, 'rakhis'), { 
+        name, desc, price: Number(price), image, timestamp: Date.now() 
+      }).then(() => {
+        alert("राखी यशस्वीरीत्या अपलोड झाली!");
+        document.getElementById("uploadName").value = "";
+        document.getElementById("uploadDesc").value = "";
+        document.getElementById("uploadPrice").value = "";
+        document.getElementById("uploadImageFile").value = "";
+        base64Image = "";
+        closeModal("uploadModal");
+      }).catch(err => alert("एरर: " + err.message));
     };
 
     // Load Rakhis Grid
@@ -196,6 +222,7 @@
             <img src="${item.image}" onerror="this.src='https://via.placeholder.com/200?text=Rakhi'">
             <div class="rakhi-card-body">
               <div class="rakhi-title">${item.name}</div>
+              <div class="rakhi-desc">${item.desc || ''}</div>
               <div class="rakhi-price">₹${item.price}</div>
             </div>`;
           container.appendChild(card);
@@ -207,6 +234,7 @@
       selectedRakhi = rakhi;
       document.getElementById("modalRakhiImage").src = rakhi.image;
       document.getElementById("modalRakhiTitle").innerText = rakhi.name;
+      document.getElementById("modalRakhiDesc").innerText = rakhi.desc || "";
       document.getElementById("modalRakhiPrice").innerText = "किंमत: ₹" + rakhi.price;
       document.getElementById("orderModal").style.display = "flex";
     };
