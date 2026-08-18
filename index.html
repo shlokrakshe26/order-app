@@ -3,129 +3,240 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>राखी स्टोअर - Rakhi Store</title>
+  <title>शाही राखी स्टोअर - Shahi Rakhi Store</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #b30000;
-      --secondary-color: #ff9900;
-      --bg-color: #fff8f0;
+      --primary-color: #800020;
+      --secondary-color: #d4af37;
+      --bg-color: #fdfbf7;
+      --card-bg: #ffffff;
+      --text-dark: #2c2c2c;
     }
+    
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       margin: 0; padding: 0;
       background-color: var(--bg-color);
-      color: #333;
+      color: var(--text-dark);
+      padding-bottom: 30px;
     }
-    header {
-      background: linear-gradient(135deg, #b30000, #e65c00);
-      color: white; text-align: center; padding: 15px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    h1 { margin: 0; font-size: 22px; }
-    .subtitle { margin-top: 4px; font-size: 12px; opacity: 0.9; }
-    .container { max-width: 600px; margin: 15px auto; padding: 0 12px; }
-    .top-bar { display: flex; flex-direction: column; gap: 8px; margin-bottom: 15px; }
-    .btn-group { display: flex; gap: 8px; width: 100%; }
-    .btn {
-      flex: 1;
-      background-color: var(--primary-color); color: white;
-      padding: 10px; border: none; border-radius: 6px;
-      cursor: pointer; font-weight: bold; font-size: 13px; text-align: center;
-    }
-    .btn:active { opacity: 0.8; }
-    .btn-success { background-color: #28a745; }
-    .btn-info { background-color: #17a2b8; }
-    .btn-warning { background-color: #ffc107; padding: 4px 8px; font-size: 11px; margin-top: 6px; border-radius: 4px; border: none; color: #000; cursor: pointer; font-weight: bold; }
-    .btn-danger { background-color: #dc3545; padding: 4px 8px; font-size: 11px; margin-top: 6px; border-radius: 4px; border: none; color: white; cursor: pointer; }
-    
-    .rakhi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .rakhi-card {
-      background: white; border-radius: 10px; overflow: hidden;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08); text-align: center; position: relative; padding-bottom: 8px;
-    }
-    .rakhi-card img { width: 100%; height: 130px; object-fit: cover; cursor: pointer; }
-    .rakhi-card-body { padding: 8px; }
-    .rakhi-title { font-size: 15px; font-weight: bold; color: #b30000; margin-bottom: 4px; cursor: pointer; }
-    .rakhi-price { font-size: 14px; color: #28a745; font-weight: bold; margin-top: 4px; }
-    .rakhi-stock { font-size: 11px; color: #e65c00; font-weight: bold; }
-    .admin-action-btns { display: flex; justify-content: center; gap: 5px; }
-    .out-of-stock { opacity: 0.6; }
-    .badge-out { position: absolute; top: 5px; right: 5px; background: red; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; }
 
+    .urgency-bar {
+      background: linear-gradient(90deg, #800020, #b30000, #800020);
+      color: white; text-align: center;
+      padding: 8px 10px; font-size: 13px; font-weight: bold;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary-color), #4a0012);
+      color: white; text-align: center; padding: 20px 15px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      border-bottom: 3px solid var(--secondary-color);
+    }
+    header h1 { margin: 0; font-size: 24px; font-weight: 800; }
+    header p { margin: 4px 0 0; font-size: 12px; color: var(--secondary-color); }
+
+    .container { max-width: 650px; margin: 0 auto; padding: 0 12px; }
+
+    .top-actions { display: flex; gap: 10px; margin: 15px 0; }
+    .btn {
+      flex: 1; padding: 10px 12px; border: none; border-radius: 8px;
+      font-weight: 700; font-size: 13px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-primary { background: var(--primary-color); color: white; }
+    .btn-outline { background: white; border: 1.5px solid var(--primary-color); color: var(--primary-color); }
+    .btn-success { background: #28a745; color: white; }
+    .btn-danger { background: #dc3545; color: white; padding: 4px 8px; font-size: 11px; }
+    .btn-warning { background: #ffc107; color: #000; padding: 4px 8px; font-size: 11px; }
+
+    .trust-badges {
+      display: flex; justify-content: space-around; background: white;
+      padding: 10px; border-radius: 10px; margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05); font-size: 11px; text-align: center;
+    }
+    .trust-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: #555; }
+    .trust-item i { font-size: 16px; color: var(--primary-color); }
+
+    .search-box {
+      width: 100%; padding: 10px 15px; border: 1px solid #ddd;
+      border-radius: 20px; margin-bottom: 15px; outline: none; font-size: 13px;
+    }
+
+    .rakhi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    
+    .rakhi-card {
+      background: var(--card-bg); border-radius: 12px; overflow: hidden;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+      border: 1px solid #eee; position: relative;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+
+    .img-container { position: relative; width: 100%; height: 140px; background: #f9f9f9; }
+    .img-container img { width: 100%; height: 100%; object-fit: cover; }
+    
+    .badge-trending {
+      position: absolute; top: 6px; left: 6px;
+      background: var(--primary-color); color: white;
+      font-size: 9px; font-weight: bold; padding: 2px 6px; border-radius: 8px;
+    }
+    .badge-low-stock {
+      position: absolute; bottom: 6px; left: 6px;
+      background: #e65c00; color: white;
+      font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 4px;
+    }
+
+    .rakhi-card-body { padding: 10px; }
+    .rakhi-title { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 4px; height: 36px; overflow: hidden; }
+    
+    .price-group { display: flex; align-items: baseline; gap: 6px; margin-top: 4px; }
+    .rakhi-price { font-size: 16px; font-weight: 800; color: #28a745; }
+    .mrp-price { font-size: 12px; color: #888; text-decoration: line-through; }
+    .save-tag { font-size: 10px; color: #b30000; font-weight: bold; }
+
+    .order-now-btn {
+      width: 100%; background: var(--primary-color);
+      color: white; border: none; padding: 8px; font-weight: bold;
+      border-radius: 6px; margin-top: 8px; cursor: pointer; font-size: 12px;
+    }
+
+    .admin-btns { display: flex; justify-content: space-between; margin-top: 6px; gap: 4px; }
+
+    /* Modals */
     .modal {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: flex-end;
     }
     .modal-content {
-      background: white; padding: 20px; border-radius: 15px 15px 0 0;
-      width: 100%; max-height: 85vh; overflow-y: auto; box-sizing: border-box; position: relative;
+      background: white; padding: 20px; border-radius: 20px 20px 0 0;
+      width: 100%; max-height: 85vh; overflow-y: auto; position: relative;
     }
-    .close-btn { position: absolute; right: 15px; top: 10px; font-size: 24px; cursor: pointer; }
-    .modal img { width: 100%; max-height: 180px; object-fit: contain; border-radius: 8px; }
-    input, textarea { width: 100%; padding: 10px; margin: 6px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
-    .order-card { background: #f9f9f9; border-left: 4px solid #b30000; padding: 10px; margin-bottom: 8px; border-radius: 4px; font-size: 12px; }
+    .close-btn { position: absolute; right: 18px; top: 15px; font-size: 22px; cursor: pointer; color: #666; }
+    input, textarea { width: 100%; padding: 10px; margin: 5px 0 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; }
+
+    /* Printable Bill Style */
+    .bill-box {
+      border: 2px dashed var(--primary-color); padding: 15px; border-radius: 10px;
+      background: #fffdf9; margin-top: 10px; font-size: 13px; text-align: left;
+    }
+    .bill-header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-bottom: 10px; }
+
+    /* Greeting Card Style */
+    .greeting-card {
+      background: linear-gradient(135deg, #fff0f3, #ffccd5);
+      border: 2px solid #ff4d6d; border-radius: 15px; padding: 15px;
+      text-align: center; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .greeting-card h3 { color: #c9184a; margin: 5px 0; }
   </style>
 </head>
 <body>
 
+  <div class="urgency-bar">
+    🚩 शाही राखी कलेक्शन - गुणवत्ता आणि विश्वासाची परंपरा!
+  </div>
+
   <header>
-    <h1>🚩 राखी कलेक्शन स्टोअर 🚩</h1>
-    <p class="subtitle">तुमच्या आवडत्या राख्या ऑनलाइन ऑर्डर करा</p>
+    <h1>🚩 शाही राखी स्टोअर 🚩</h1>
+    <p>रक्षाबंधनासाठी आकर्षक आणि खास राख्या</p>
   </header>
 
   <div class="container">
-    <div class="top-bar">
-      <div class="btn-group">
-        <button class="btn btn-info" onclick="openMyOrdersModal()">📦 माझी ऑर्डर</button>
-        <button class="btn" onclick="checkPasswordAndOpenAllOrders()">📋 सर्व ऑर्डर्स</button>
-      </div>
-      <button class="btn btn-success" onclick="checkPasswordAndOpenUpload()">+ राखी अपलोड करा (Admin)</button>
+    <div class="top-actions">
+      <button class="btn btn-outline" onclick="openMyOrdersModal()"><i class="fa-solid fa-box"></i> माझी ऑर्डर</button>
+      <button class="btn btn-outline" onclick="checkPasswordAndOpenAllOrders()"><i class="fa-solid fa-list-check"></i> सर्व ऑर्डर्स</button>
     </div>
 
-    <h3 style="margin: 10px 0;">उपलब्ध राख्या</h3>
-    <div id="rakhiContainer" class="rakhi-grid"><p>राख्या लोड होत आहेत...</p></div>
+    <div class="trust-badges">
+      <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> १००% सुरक्षित</div>
+      <div class="trust-item"><i class="fa-solid fa-truck-fast"></i> जलद डिलिव्हरी</div>
+      <div class="trust-item"><i class="fa-solid fa-award"></i> बेस्ट क्वालिटी</div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%; margin-bottom: 12px;" onclick="checkPasswordAndOpenUpload()">
+      <i class="fa-solid fa-plus"></i> नवीन राखी जोडा (Admin)
+    </button>
+
+    <input type="text" id="searchInput" class="search-box" placeholder="🔎 राखी शोधून पहा..." onkeyup="filterRakhis()">
+
+    <h3 style="margin: 0 0 10px 4px; font-size: 15px;">✨ उपलब्ध राख्या</h3>
+    
+    <div id="rakhiContainer" class="rakhi-grid">
+      <p style="grid-column: span 2; text-align:center; padding:20px;">लोड होत आहे...</p>
+    </div>
   </div>
 
   <!-- Upload Modal -->
   <div id="uploadModal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('uploadModal')">&times;</span>
-      <h3>नवीन राखी जोडा</h3>
+      <h3>➕ नवीन राखी जोडा</h3>
       <input type="file" id="uploadImageFile" accept="image/*" onchange="previewFileImage(event)">
       <input type="text" id="uploadName" placeholder="राखीचे नाव">
-      <input type="number" id="uploadPrice" placeholder="किंमत (₹)">
-      <input type="number" id="uploadStock" placeholder="स्टॉक/साठा (नग संख्या)">
-      <button class="btn btn-success" style="width:100%; margin-top:10px;" onclick="uploadRakhiToFirebase()">Firebase वर अपलोड करा</button>
+      <input type="number" id="uploadPrice" placeholder="विक्री किंमत (उदा. 50)">
+      <input type="number" id="uploadStock" placeholder="साठा (नग)">
+      <button class="btn btn-primary" style="width:100%;" onclick="uploadRakhiToFirebase()">सेव्ह करा</button>
     </div>
   </div>
 
-  <!-- Edit Rakhi Modal (Admin) -->
+  <!-- Edit Modal -->
   <div id="editModal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
-      <h3>राखीची माहिती बदला (Edit)</h3>
+      <h3>✏️ राखी बदल</h3>
       <input type="text" id="editName" placeholder="राखीचे नाव">
-      <input type="number" id="editPrice" placeholder="किंमत (₹)">
-      <input type="number" id="editStock" placeholder="स्टॉक/साठा (नग संख्या)">
-      <button class="btn btn-warning" style="width:100%; margin-top:10px;" onclick="updateRakhiToFirebase()">बदल सेव्ह करा</button>
+      <input type="number" id="editPrice" placeholder="विक्री किंमत (₹)">
+      <input type="number" id="editStock" placeholder="साठा (नग)">
+      <button class="btn btn-primary" style="width:100%;" onclick="updateRakhiToFirebase()">बदल सेव्ह करा</button>
     </div>
   </div>
 
-  <!-- Order Placement Modal -->
+  <!-- Order Modal -->
   <div id="orderModal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('orderModal')">&times;</span>
-      <img id="modalRakhiImage" src="" alt="Rakhi">
-      <h3 id="modalRakhiTitle" style="color:#b30000; margin:5px 0;"></h3>
-      <p id="modalRakhiPrice" style="font-size:16px; font-weight:bold; color:#28a745; margin:4px 0;"></p>
-      <p id="modalRakhiStock" style="font-size:12px; color:#e65c00; font-weight:bold;"></p>
-      <hr>
-      <h4>ऑर्डरसाठी माहिती भरा:</h4>
-      <input type="text" id="custName" placeholder="तुमचे पूर्ण नाव">
-      <textarea id="custAddress" placeholder="पूर्ण पत्ता (Address)" rows="2"></textarea>
-      <input type="number" id="custQty" placeholder="नग (Quantity)" value="1" min="1">
+      <div style="text-align: center;">
+        <img id="modalRakhiImage" src="" style="width:100%; max-height:140px; object-fit:contain;">
+        <h3 id="modalRakhiTitle" style="color:var(--primary-color); margin:6px 0 2px;"></h3>
+        <p id="modalRakhiPrice" style="font-size:16px; font-weight:800; color:#28a745; margin:0;"></p>
+      </div>
+      <hr style="border:0.5px solid #eee; margin:10px 0;">
+      <h4 style="margin:0 0 6px;">ऑर्डरसाठी माहिती भरा:</h4>
+      <input type="text" id="custName" placeholder="तुमचे नाव">
+      <textarea id="custAddress" placeholder="पूर्ण पत्ता" rows="2"></textarea>
+      <input type="number" id="custQty" placeholder="नग संख्या" value="1" min="1" onchange="calculateModalTotal()">
       <input type="tel" id="custPhone" placeholder="मोबाईल नंबर">
-      <button class="btn btn-success" style="width:100%; margin-top:10px;" onclick="placeOrder()">ऑर्डर कन्फर्म करा</button>
+      <button class="btn btn-success" style="width:100%; font-size:14px;" onclick="placeOrder()">🛍️ ऑर्डर कन्फर्म करा</button>
+    </div>
+  </div>
+
+  <!-- Success Bill & Greeting Modal -->
+  <div id="successModal" class="modal">
+    <div class="modal-content" style="text-align:center;">
+      <span class="close-btn" onclick="closeModal('successModal')">&times;</span>
+      <h2 style="color:#28a745; margin-bottom:5px;">🎉 ऑर्डर यशस्वी झाली!</h2>
+      <p style="font-size:12px; margin-top:0;">तुमची ऑर्डर नोंदवली गेली आहे.</p>
+
+      <!-- Bill -->
+      <div class="bill-box" id="printableBill">
+        <div class="bill-header">
+          <b style="font-size:15px; color:var(--primary-color);">🚩 शाही राखी स्टोअर 🚩</b><br>
+          <small>ऑर्डर पावती (Invoice)</small>
+        </div>
+        <div id="billDetails"></div>
+      </div>
+
+      <!-- Greeting Card -->
+      <div class="greeting-card">
+        <h3>✨ शुभ रक्षाबंधन! ✨</h3>
+        <p id="greetingText" style="font-size:13px; color:#555;"></p>
+        <p style="font-size:11px; font-style:italic; color:#c9184a;">"रेशमाच्या धाग्यात जपलाय प्रेमाचा साठा, भाऊ-बहिणीच्या नात्याला उदंड उदंड आयुरारोग्य आणि सुख लाभो!"</p>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%; margin-top:15px;" onclick="closeModal('successModal')">ठीक आहे</button>
     </div>
   </div>
 
@@ -133,19 +244,19 @@
   <div id="myOrdersModal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('myOrdersModal')">&times;</span>
-      <h3>माझी ऑर्डर शोधा</h3>
-      <input type="tel" id="searchPhone" placeholder="ऑर्डर करताना टाकलेला मोबाईल नंबर">
-      <button class="btn btn-info" style="width:100%;" onclick="fetchMyOrders()">ऑर्डर शोधा</button>
+      <h3>📦 माझी ऑर्डर शोधा</h3>
+      <input type="tel" id="searchPhone" placeholder="मोबाईल नंबर">
+      <button class="btn btn-primary" style="width:100%;" onclick="fetchMyOrders()">शोधा</button>
       <div id="myOrdersList" style="margin-top:15px;"></div>
     </div>
   </div>
 
-  <!-- All Orders Modal (Admin) -->
+  <!-- All Orders Modal -->
   <div id="allOrdersModal" class="modal">
     <div class="modal-content">
       <span class="close-btn" onclick="closeModal('allOrdersModal')">&times;</span>
-      <h3>सर्व ऑर्डर्स (Admin)</h3>
-      <div id="allOrdersList" style="margin-top:10px;"><p>ऑर्डर्स लोड होत आहेत...</p></div>
+      <h3>📋 सर्व ऑर्डर्स (Admin)</h3>
+      <div id="allOrdersList" style="margin-top:10px;"></div>
     </div>
   </div>
 
@@ -167,82 +278,42 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
-    let selectedRakhi = null;
-    let selectedRakhiKey = "";
-    let editRakhiKey = "";
-    let base64Image = "";
-    let isInitialLoad = true;
+    let selectedRakhi = null, selectedRakhiKey = "", editRakhiKey = "", base64Image = "";
+    let isInitialLoad = true, allRakhisData = {};
 
-    // Web Audio API Sound Generator for Buzzer Sound
     function playBuzzerSound() {
       try {
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
-        // Beep 1
-        const osc1 = audioCtx.createOscillator();
-        const gain1 = audioCtx.createGain();
-        osc1.type = 'sawtooth';
-        osc1.frequency.setValueAtTime(880, audioCtx.currentTime);
-        gain1.gain.setValueAtTime(0.3, audioCtx.currentTime);
-        osc1.connect(gain1);
-        gain1.connect(audioCtx.destination);
-        osc1.start();
-        osc1.stop(audioCtx.currentTime + 0.2);
-
-        // Beep 2
-        setTimeout(() => {
-          const osc2 = audioCtx.createOscillator();
-          const gain2 = audioCtx.createGain();
-          osc2.type = 'sawtooth';
-          osc2.frequency.setValueAtTime(1046.50, audioCtx.currentTime);
-          gain2.gain.setValueAtTime(0.4, audioCtx.currentTime);
-          osc2.connect(gain2);
-          gain2.connect(audioCtx.destination);
-          osc2.start();
-          osc2.stop(audioCtx.currentTime + 0.3);
-        }, 250);
-      } catch (e) {
-        console.log("Audio play error:", e);
-      }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        osc.connect(gain); gain.connect(audioCtx.destination);
+        osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+      } catch (e) {}
     }
 
-    // Auto Request Notification Permission on first click
     document.body.addEventListener('click', () => {
-      if ("Notification" in window && Notification.permission !== "granted") {
-        Notification.requestPermission();
-      }
+      if ("Notification" in window && Notification.permission !== "granted") Notification.requestPermission();
     }, { once: true });
 
-    function triggerOrderAlert(order) {
-      // Play Sound
-      playBuzzerSound();
-
-      // Show Device Notification
-      if ("Notification" in window && Notification.permission === "granted") {
-        new Notification("🚨 नवीन ऑर्डर आली आहे!", {
-          body: `${order.customerName} यांनी ${order.rakhiName} ची (${order.quantity} नग - ₹${order.totalAmount}) ऑर्डर दिली आहे.`
-        });
-      }
-    }
-
-    // Listener for New Orders
     const ordersRef = ref(database, 'orders');
     onChildAdded(ordersRef, (snapshot) => {
-      if (isInitialLoad) return; // Skip existing orders when website loads
-      const order = snapshot.val();
-      triggerOrderAlert(order);
+      if (isInitialLoad) return;
+      playBuzzerSound();
+      const o = snapshot.val();
+      if ("Notification" in window && Notification.permission === "granted") {
+        new Notification("🚨 नवीन ऑर्डर आली आहे!", { body: `${o.customerName} - ${o.rakhiName} (₹${o.totalAmount})` });
+      }
     });
-
-    onValue(ordersRef, () => {
-      isInitialLoad = false;
-    }, { onlyOnce: true });
+    onValue(ordersRef, () => { isInitialLoad = false; }, { onlyOnce: true });
 
     window.closeModal = id => document.getElementById(id).style.display = "none";
 
     window.checkPasswordAndOpenUpload = function() {
-      if (prompt("ॲडमिन पासवर्ड टाका:") === "0000") {
-        document.getElementById("uploadModal").style.display = "flex";
-      } else alert("चुकीचा पासवर्ड!");
+      if (prompt("ॲडमिन पासवर्ड टाका:") === "0000") document.getElementById("uploadModal").style.display = "flex";
+      else alert("चुकीचा पासवर्ड!");
     };
 
     window.checkPasswordAndOpenAllOrders = function() {
@@ -263,9 +334,7 @@
         const reader = new FileReader();
         reader.onload = e => {
           base64Image = e.target.result;
-          if (!document.getElementById("uploadName").value) {
-            document.getElementById("uploadName").value = file.name.split('.')[0];
-          }
+          if (!document.getElementById("uploadName").value) document.getElementById("uploadName").value = file.name.split('.')[0];
         };
         reader.readAsDataURL(file);
       }
@@ -277,162 +346,164 @@
       const stock = document.getElementById("uploadStock").value.trim();
       const image = base64Image || "https://via.placeholder.com/200?text=Rakhi";
 
-      if (!name || !price || !stock) return alert("कृपया नाव, किंमत आणि स्टॉक टाका!");
-
-      push(ref(database, 'rakhis'), { 
-        name, price: Number(price), stock: Number(stock), image, timestamp: Date.now() 
-      }).then(() => {
-        alert("राखी अपलोड झाली!");
-        document.getElementById("uploadName").value = "";
-        document.getElementById("uploadPrice").value = "";
-        document.getElementById("uploadStock").value = "";
-        document.getElementById("uploadImageFile").value = "";
-        base64Image = "";
-        closeModal("uploadModal");
-      }).catch(err => alert("एरर: " + err.message));
-    };
-
-    window.openEditModal = function(key, event) {
-      event.stopPropagation();
-      if (prompt("राखी एडिट करण्यासाठी ॲडमिन पासवर्ड टाका:") === "0000") {
-        onValue(ref(database, 'rakhis/' + key), snapshot => {
-          const rakhi = snapshot.val();
-          if (rakhi) {
-            editRakhiKey = key;
-            document.getElementById("editName").value = rakhi.name;
-            document.getElementById("editPrice").value = rakhi.price;
-            document.getElementById("editStock").value = rakhi.stock;
-            document.getElementById("editModal").style.display = "flex";
-          }
-        }, { onlyOnce: true });
-      } else {
-        alert("चुकीचा पासवर्ड!");
-      }
-    };
-
-    window.updateRakhiToFirebase = function() {
-      const name = document.getElementById("editName").value.trim();
-      const price = document.getElementById("editPrice").value.trim();
-      const stock = document.getElementById("editStock").value.trim();
-
       if (!name || !price || !stock) return alert("सर्व माहिती भरा!");
 
-      update(ref(database, 'rakhis/' + editRakhiKey), {
-        name, price: Number(price), stock: Number(stock)
-      }).then(() => {
-        alert("राखीची माहिती यशस्वीपणे बदलली!");
-        closeModal("editModal");
-      }).catch(err => alert("एरर: " + err.message));
-    };
-
-    window.deleteRakhi = function(key, event) {
-      event.stopPropagation();
-      if (prompt("राखी डिलीट करण्यासाठी ॲडमिन पासवर्ड टाका:") === "0000") {
-        if (confirm("तुम्हाला ही राखी खरंच काढून टाकायची आहे का?")) {
-          remove(ref(database, 'rakhis/' + key))
-            .then(() => alert("राखी काढण्यात आली आहे!"))
-            .catch(err => alert("एरर: " + err.message));
-        }
-      } else {
-        alert("चुकीचा पासवर्ड!");
-      }
+      push(ref(database, 'rakhis'), { name, price: Number(price), stock: Number(stock), image, timestamp: Date.now() })
+      .then(() => { alert("राखी अपलोड झाली!"); closeModal("uploadModal"); });
     };
 
     onValue(ref(database, 'rakhis'), snapshot => {
+      allRakhisData = snapshot.val() || {};
+      renderRakhis(allRakhisData);
+    });
+
+    // Realistic Price Math Calculation (15% to 20% Higher Realistic MRP)
+    function renderRakhis(data) {
       const container = document.getElementById("rakhiContainer");
       container.innerHTML = "";
-      const data = snapshot.val();
-      if (data) {
+      if (Object.keys(data).length > 0) {
         Object.keys(data).forEach(key => {
           const item = data[key];
           const isOut = item.stock <= 0;
-          const card = document.createElement("div");
-          card.className = "rakhi-card " + (isOut ? "out-of-stock" : "");
+          const isLowStock = item.stock > 0 && item.stock <= 3;
           
+          // Realistic MRP: 20% higher rounded off properly
+          const realMRP = Math.round(item.price * 1.20); 
+          const discountAmt = realMRP - item.price;
+
+          const card = document.createElement("div");
+          card.className = "rakhi-card";
           card.innerHTML = `
-            ${isOut ? '<span class="badge-out">Out of Stock</span>' : ''}
-            <img src="${item.image}" onclick="openRakhiModalByCard('${key}')" onerror="this.src='https://via.placeholder.com/200?text=Rakhi'">
+            <div class="img-container">
+              <span class="badge-trending">प्रीमियम</span>
+              ${isOut ? '<span class="badge-low-stock" style="background:red;">Out of Stock</span>' : ''}
+              ${isLowStock ? `<span class="badge-low-stock">फक्त ${item.stock} शिल्लक!</span>` : ''}
+              <img src="${item.image}" onclick="openRakhiModalByCard('${key}')" onerror="this.src='https://via.placeholder.com/200?text=Rakhi'">
+            </div>
             <div class="rakhi-card-body">
               <div class="rakhi-title" onclick="openRakhiModalByCard('${key}')">${item.name}</div>
-              <div class="rakhi-price">₹${item.price}</div>
-              <div class="rakhi-stock">साठा: ${item.stock} नग</div>
-              <div class="admin-action-btns">
+              <div class="price-group">
+                <span class="rakhi-price">₹${item.price}</span>
+                <span class="mrp-price">M.R.P: ₹${realMRP}</span>
+                <span class="save-tag">(₹${discountAmt} बचत)</span>
+              </div>
+              <button class="order-now-btn" onclick="openRakhiModalByCard('${key}')">
+                ${isOut ? 'Out of Stock' : '🛒 आताच खरेदी करा'}
+              </button>
+              <div class="admin-btns">
                 <button class="btn-warning" onclick="openEditModal('${key}', event)">✏️ एडिट</button>
                 <button class="btn-danger" onclick="deleteRakhi('${key}', event)">🗑️ डिलीट</button>
               </div>
             </div>`;
           container.appendChild(card);
         });
-      } else container.innerHTML = "<p>राखी उपलब्ध नाही.</p>";
-    });
+      } else container.innerHTML = "<p style='grid-column:span 2; text-align:center;'>सध्या एकही राखी उपलब्ध नाही.</p>";
+    }
+
+    window.filterRakhis = function() {
+      const query = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = {};
+      Object.keys(allRakhisData).forEach(key => {
+        if (allRakhisData[key].name.toLowerCase().includes(query)) filtered[key] = allRakhisData[key];
+      });
+      renderRakhis(filtered);
+    };
 
     window.openRakhiModalByCard = function(key) {
-      onValue(ref(database, 'rakhis/' + key), snapshot => {
-        const item = snapshot.val();
-        if (item) {
-          if (item.stock <= 0) return alert("ही राखी Out of Stock झाली आहे!");
-          openOrderModal(item, key);
-        }
-      }, { onlyOnce: true });
+      const item = allRakhisData[key];
+      if (item) {
+        if (item.stock <= 0) return alert("ही राखी सध्या संपली आहे!");
+        selectedRakhi = item; selectedRakhiKey = key;
+        document.getElementById("modalRakhiImage").src = item.image;
+        document.getElementById("modalRakhiTitle").innerText = item.name;
+        document.getElementById("modalRakhiPrice").innerText = "किंमत: ₹" + item.price;
+        document.getElementById("orderModal").style.display = "flex";
+      }
     };
 
-    window.openOrderModal = function(rakhi, key) {
-      selectedRakhi = rakhi;
-      selectedRakhiKey = key;
-      document.getElementById("modalRakhiImage").src = rakhi.image;
-      document.getElementById("modalRakhiTitle").innerText = rakhi.name;
-      document.getElementById("modalRakhiPrice").innerText = "किंमत: ₹" + rakhi.price;
-      document.getElementById("modalRakhiStock").innerText = "उपलब्ध साठा: " + rakhi.stock + " नग";
-      document.getElementById("orderModal").style.display = "flex";
+    window.openEditModal = function(key, event) {
+      event.stopPropagation();
+      if (prompt("ॲडमिन पासवर्ड टाका:") === "0000") {
+        const item = allRakhisData[key];
+        editRakhiKey = key;
+        document.getElementById("editName").value = item.name;
+        document.getElementById("editPrice").value = item.price;
+        document.getElementById("editStock").value = item.stock;
+        document.getElementById("editModal").style.display = "flex";
+      } else alert("चुकीचा पासवर्ड!");
     };
 
+    window.updateRakhiToFirebase = function() {
+      const name = document.getElementById("editName").value.trim();
+      const price = document.getElementById("editPrice").value.trim();
+      const stock = document.getElementById("editStock").value.trim();
+      update(ref(database, 'rakhis/' + editRakhiKey), { name, price: Number(price), stock: Number(stock) })
+      .then(() => { alert("बदल सेव्ह झाले!"); closeModal("editModal"); });
+    };
+
+    window.deleteRakhi = function(key, event) {
+      event.stopPropagation();
+      if (prompt("ॲडमिन पासवर्ड टाका:") === "0000") {
+        if (confirm("काढून टाकायचे का?")) remove(ref(database, 'rakhis/' + key));
+      } else alert("चुकीचा पासवर्ड!");
+    };
+
+    // Place Order & Generate Bill + Greeting Card
     window.placeOrder = function() {
       const name = document.getElementById("custName").value.trim();
       const address = document.getElementById("custAddress").value.trim();
       const qty = Number(document.getElementById("custQty").value.trim());
       const phone = document.getElementById("custPhone").value.trim();
 
-      if (!name || !address || !qty || !phone) return alert("सर्व माहिती भरा!");
-      if (qty > selectedRakhi.stock) return alert("शक्य नाही! उपलब्ध साठ्यापेक्षा जास्त नग टाकले आहेत.");
+      if (!name || !address || !qty || !phone) return alert("कृपया सर्व माहिती भरा!");
+      if (qty > selectedRakhi.stock) return alert("साठ्यापेक्षा जास्त नग टाकले आहेत!");
+
+      const totalAmt = selectedRakhi.price * qty;
+      const orderDate = new Date().toLocaleString();
 
       push(ref(database, 'orders'), {
         rakhiName: selectedRakhi.name, price: selectedRakhi.price,
         customerName: name, address, quantity: qty, phone,
-        totalAmount: selectedRakhi.price * qty, orderDate: new Date().toLocaleString()
+        totalAmount: totalAmt, orderDate: orderDate
       }).then(() => {
-        const newStock = selectedRakhi.stock - qty;
-        update(ref(database, 'rakhis/' + selectedRakhiKey), { stock: newStock });
-
-        alert("ऑर्डर यशस्वी झाली!");
+        update(ref(database, 'rakhis/' + selectedRakhiKey), { stock: selectedRakhi.stock - qty });
         closeModal("orderModal");
-      }).catch(err => alert("एरर: " + err.message));
+
+        // Set Bill Details
+        document.getElementById("billDetails").innerHTML = `
+          <b>ग्राहक:</b> ${name}<br>
+          <b>मोबाईल:</b> ${phone}<br>
+          <b>पत्ता:</b> ${address}<br><br>
+          <b>आयटम:</b> ${selectedRakhi.name} (${qty} नग)<br>
+          <b>दर:</b> ₹${selectedRakhi.price} प्रति नग<br>
+          <hr style="border:0.5px solid #ccc; margin:5px 0;">
+          <b>एकूण बिल:</b> <span style="font-size:16px; color:#28a745;">₹${totalAmt}</span> (Cash on Delivery)<br>
+          <small style="color:#888;">तारीख: ${orderDate}</small>
+        `;
+
+        // Set Greeting Card Details
+        document.getElementById("greetingText").innerText = `प्रिय ${name}, 'शाही राखी स्टोअर' कडून तुम्हाला आणि तुमच्या कुटुंबाला रक्षाबंधनाच्या हार्दिक शुभेच्छा!`;
+
+        document.getElementById("successModal").style.display = "flex";
+      });
     };
 
     window.fetchMyOrders = function() {
       const phone = document.getElementById("searchPhone").value.trim();
-      if (!phone) return alert("मोबाईल नंबर टाका!");
-
       onValue(ref(database, 'orders'), snapshot => {
         const list = document.getElementById("myOrdersList");
         list.innerHTML = "";
         const data = snapshot.val();
         let found = false;
-
         if (data) {
           Object.keys(data).forEach(key => {
-            const order = data[key];
-            if (order.phone === phone) {
+            if (data[key].phone === phone) {
               found = true;
-              list.innerHTML += `
-                <div class="order-card">
-                  <b>राखी:</b> ${order.rakhiName} (${order.quantity} नग)<br>
-                  <b>एकूण बिल:</b> ₹${order.totalAmount}<br>
-                  <b>तारीख:</b> ${order.orderDate}
-                </div>`;
+              list.innerHTML += `<div style="background:#f9f9f9; border-left:4px solid var(--primary-color); padding:8px; margin-bottom:8px; font-size:12px;"><b>राखी:</b> ${data[key].rakhiName}<br><b>रक्कम:</b> ₹${data[key].totalAmount}<br><b>तारीख:</b> ${data[key].orderDate}</div>`;
             }
           });
         }
-        if (!found) list.innerHTML = "<p>या नंबरवर कोणतीही ऑर्डर सापडली नाही.</p>";
+        if (!found) list.innerHTML = "<p>ऑर्डर सापडली नाही.</p>";
       }, { onlyOnce: true });
     };
 
@@ -441,20 +512,12 @@
         const list = document.getElementById("allOrdersList");
         list.innerHTML = "";
         const data = snapshot.val();
-
         if (data) {
           Object.keys(data).forEach(key => {
-            const order = data[key];
-            list.innerHTML += `
-              <div class="order-card">
-                <b>ग्राहक:</b> ${order.customerName} (${order.phone})<br>
-                <b>राखी:</b> ${order.rakhiName} | <b>नग:</b> ${order.quantity}<br>
-                <b>रक्कम:</b> ₹${order.totalAmount}<br>
-                <b>पत्ता:</b> ${order.address}<br>
-                <small><b>तारीख:</b> ${order.orderDate}</small>
-              </div>`;
+            const o = data[key];
+            list.innerHTML += `<div style="background:#f9f9f9; border-left:4px solid var(--primary-color); padding:8px; margin-bottom:8px; font-size:12px;"><b>ग्राहक:</b> ${o.customerName} (${o.phone})<br><b>राखी:</b> ${o.rakhiName} (${o.quantity} नग)<br><b>एकूण:</b> ₹${o.totalAmount}<br><b>पत्ता:</b> ${o.address}</div>`;
           });
-        } else list.innerHTML = "<p>अजून एकही ऑर्डर आलेली नाही.</p>";
+        } else list.innerHTML = "<p>एकही ऑर्डर नाही.</p>";
       }, { onlyOnce: true });
     }
   </script>
