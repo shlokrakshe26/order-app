@@ -55,25 +55,20 @@
     .btn-danger { background: #dc3545; color: white; padding: 4px 8px; font-size: 11px; }
     .btn-warning { background: #ffc107; color: #000; padding: 4px 8px; font-size: 11px; }
 
-    /* Blinkit Style Hero Banner */
     .hero-banner {
       background: linear-gradient(135deg, #008080, #004d4d);
       color: white; border-radius: 16px; padding: 18px; margin: 12px 0;
       text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      position: relative; overflow: hidden;
     }
     .hero-banner h2 { margin: 0; font-size: 22px; color: #fff; font-weight: 900; }
     .hero-banner p { margin: 5px 0 0; font-size: 13px; color: #e0f2f1; }
 
-    /* Blinkit Style Categories Grid */
     .category-section {
       background: #fff; border-radius: 16px; padding: 14px;
       margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .category-section h3 { margin: 0 0 12px 0; font-size: 15px; color: var(--primary-color); }
-    .category-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-    }
+    .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
     .cat-card {
       background: #fff; border: 1px solid #eee; border-radius: 12px;
       padding: 10px; text-align: center; cursor: pointer;
@@ -86,7 +81,6 @@
     .search-box {
       width: 100%; padding: 12px 16px; border: 1px solid #ddd;
       border-radius: 25px; margin-bottom: 15px; outline: none; font-size: 13px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
     }
 
     .rakhi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
@@ -121,7 +115,6 @@
     .price-group { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
     .rakhi-price { font-size: 15px; font-weight: 800; color: #28a745; }
     .mrp-price { font-size: 11px; color: #888; text-decoration: line-through; }
-    .save-tag { font-size: 9px; color: #b30000; font-weight: bold; }
 
     .stock-text-customer { font-size: 11px; font-weight: bold; margin-top: 4px; color: #555; }
 
@@ -134,7 +127,6 @@
 
     .admin-btns { display: flex; justify-content: space-between; margin-top: 6px; gap: 4px; }
 
-    /* Modals */
     .modal {
       display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: flex-end;
@@ -146,7 +138,6 @@
     .close-btn { position: absolute; right: 18px; top: 15px; font-size: 22px; cursor: pointer; color: #666; }
     input, select, textarea { width: 100%; padding: 10px; margin: 5px 0 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; }
 
-    /* Printable Bill & Greeting Card Style */
     .bill-box {
       border: 2px dashed var(--primary-color); padding: 15px; border-radius: 10px;
       background: #fffdf9; margin-top: 10px; font-size: 13px; text-align: left;
@@ -156,7 +147,7 @@
     .greeting-card {
       background: linear-gradient(135deg, #fff0f3, #ffccd5);
       border: 2px solid #ff4d6d; border-radius: 15px; padding: 15px;
-      text-align: center; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center; margin-top: 15px;
     }
     .greeting-card h3 { color: #c9184a; margin: 5px 0; }
 
@@ -184,13 +175,11 @@
       <button class="btn btn-outline" onclick="checkPasswordAndOpenAllOrders()"><i class="fa-solid fa-list-check"></i> सर्व ऑर्डर्स</button>
     </div>
 
-    <!-- Blinkit Style Hero Banner -->
     <div class="hero-banner">
       <h2>CELEBRATE RAKSHA BANDHAN</h2>
       <p>✨ खास डिझाईन्स आणि जलद घरपोच सुविधा ✨</p>
     </div>
 
-    <!-- Blinkit Style Category Grid -->
     <div class="category-section">
       <h3>✨ Find The Perfect Rakhi</h3>
       <div class="category-grid">
@@ -241,6 +230,7 @@
       <h3>➕ नवीन राखी जोडा</h3>
       <input type="file" id="uploadImageFile" accept="image/*" onchange="previewFileImage(event)">
       <input type="text" id="uploadName" placeholder="राखीचे नाव">
+      <label style="font-size: 12px; font-weight: bold; color: #555;">कॅटेगरी निवडा:</label>
       <select id="uploadCategory">
         <option value="Super Hero">Super Hero</option>
         <option value="Peacock">Peacock</option>
@@ -261,6 +251,15 @@
       <span class="close-btn" onclick="closeModal('editModal')">&times;</span>
       <h3>✏️ राखी बदल</h3>
       <input type="text" id="editName" placeholder="राखीचे नाव">
+      <label style="font-size: 12px; font-weight: bold; color: #555;">कॅटेगरी बदला:</label>
+      <select id="editCategory">
+        <option value="Super Hero">Super Hero</option>
+        <option value="Peacock">Peacock</option>
+        <option value="Bracelet">Bracelet</option>
+        <option value="Lumba">Lumba</option>
+        <option value="Rudraksh & Om">Rudraksh & Om</option>
+        <option value="इतर">इतर</option>
+      </select>
       <input type="number" id="editPrice" placeholder="विक्री किंमत (₹)">
       <input type="number" id="editStock" placeholder="साठा (नग)">
       <button class="btn btn-primary" style="width:100%;" onclick="updateRakhiToFirebase()">बदल सेव्ह करा</button>
@@ -452,7 +451,6 @@
           }
 
           const realMRP = Math.round(item.price * 1.20); 
-          const discountAmt = realMRP - item.price;
 
           const card = document.createElement("div");
           card.className = "rakhi-card";
@@ -526,6 +524,7 @@
         const item = allRakhisData[key];
         editRakhiKey = key;
         document.getElementById("editName").value = item.name;
+        document.getElementById("editCategory").value = item.category || "इतर";
         document.getElementById("editPrice").value = item.price;
         document.getElementById("editStock").value = item.stock;
         document.getElementById("editModal").style.display = "flex";
@@ -534,9 +533,10 @@
 
     window.updateRakhiToFirebase = function() {
       const name = document.getElementById("editName").value.trim();
+      const category = document.getElementById("editCategory").value;
       const price = document.getElementById("editPrice").value.trim();
       const stock = document.getElementById("editStock").value.trim();
-      update(ref(database, 'rakhis/' + editRakhiKey), { name, price: Number(price), stock: Number(stock) })
+      update(ref(database, 'rakhis/' + editRakhiKey), { name, category, price: Number(price), stock: Number(stock) })
       .then(() => { alert("बदल सेव्ह झाले!"); closeModal("editModal"); });
     };
 
