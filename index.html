@@ -9,12 +9,13 @@
     :root {
       --primary-color: #800020;
       --secondary-color: #d4af37;
-      --bg-color: #fdfbf7;
+      --bg-color: #f7f9fc;
       --card-bg: #ffffff;
       --text-dark: #2c2c2c;
+      --blinkit-accent: #e51758;
     }
     
-    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
     
     body {
       margin: 0; padding: 0;
@@ -31,16 +32,16 @@
 
     header {
       background: linear-gradient(135deg, var(--primary-color), #4a0012);
-      color: white; text-align: center; padding: 20px 15px;
+      color: white; text-align: center; padding: 15px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.15);
       border-bottom: 3px solid var(--secondary-color);
     }
-    header h1 { margin: 0; font-size: 22px; font-weight: 800; }
+    header h1 { margin: 0; font-size: 20px; font-weight: 800; }
     header p { margin: 4px 0 0; font-size: 12px; color: var(--secondary-color); }
 
     .container { max-width: 650px; margin: 0 auto; padding: 0 12px; }
 
-    .top-actions { display: flex; gap: 10px; margin: 15px 0; }
+    .top-actions { display: flex; gap: 10px; margin: 12px 0; }
     .btn {
       flex: 1; padding: 10px 12px; border: none; border-radius: 8px;
       font-weight: 700; font-size: 13px; cursor: pointer;
@@ -54,25 +55,46 @@
     .btn-danger { background: #dc3545; color: white; padding: 4px 8px; font-size: 11px; }
     .btn-warning { background: #ffc107; color: #000; padding: 4px 8px; font-size: 11px; }
 
-    .trust-badges {
-      display: flex; justify-content: space-around; background: white;
-      padding: 10px; border-radius: 10px; margin-bottom: 15px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05); font-size: 11px; text-align: center;
+    /* Blinkit Style Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #008080, #004d4d);
+      color: white; border-radius: 16px; padding: 18px; margin: 12px 0;
+      text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      position: relative; overflow: hidden;
     }
-    .trust-item { display: flex; flex-direction: column; align-items: center; gap: 3px; color: #555; }
-    .trust-item i { font-size: 16px; color: var(--primary-color); }
+    .hero-banner h2 { margin: 0; font-size: 22px; color: #fff; font-weight: 900; }
+    .hero-banner p { margin: 5px 0 0; font-size: 13px; color: #e0f2f1; }
+
+    /* Blinkit Style Categories Grid */
+    .category-section {
+      background: #fff; border-radius: 16px; padding: 14px;
+      margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .category-section h3 { margin: 0 0 12px 0; font-size: 15px; color: var(--primary-color); }
+    .category-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+    }
+    .cat-card {
+      background: #fff; border: 1px solid #eee; border-radius: 12px;
+      padding: 10px; text-align: center; cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cat-card:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .cat-card i { font-size: 24px; color: var(--blinkit-accent); margin-bottom: 6px; }
+    .cat-card span { display: block; font-size: 12px; font-weight: 700; color: #333; }
 
     .search-box {
-      width: 100%; padding: 10px 15px; border: 1px solid #ddd;
-      border-radius: 20px; margin-bottom: 15px; outline: none; font-size: 13px;
+      width: 100%; padding: 12px 16px; border: 1px solid #ddd;
+      border-radius: 25px; margin-bottom: 15px; outline: none; font-size: 13px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
     }
 
     .rakhi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     
     .rakhi-card {
-      background: var(--card-bg); border-radius: 12px; overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-      border: 1px solid #eee; position: relative;
+      background: var(--card-bg); border-radius: 14px; overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      border: 1px solid #edf2f7; position: relative;
       display: flex; flex-direction: column; justify-content: space-between;
     }
 
@@ -94,25 +116,21 @@
     .stock-out { background: #dc3545; }
 
     .rakhi-card-body { padding: 10px; }
-    .rakhi-title { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 4px; height: 36px; overflow: hidden; }
+    .rakhi-title { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 4px; height: 34px; overflow: hidden; }
     
-    .price-group { display: flex; align-items: baseline; gap: 6px; margin-top: 4px; }
-    .rakhi-price { font-size: 16px; font-weight: 800; color: #28a745; }
-    .mrp-price { font-size: 12px; color: #888; text-decoration: line-through; }
-    .save-tag { font-size: 10px; color: #b30000; font-weight: bold; }
+    .price-group { display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+    .rakhi-price { font-size: 15px; font-weight: 800; color: #28a745; }
+    .mrp-price { font-size: 11px; color: #888; text-decoration: line-through; }
+    .save-tag { font-size: 9px; color: #b30000; font-weight: bold; }
 
-    .stock-text-customer {
-      font-size: 11px; font-weight: bold; margin-top: 4px; color: #555;
-    }
+    .stock-text-customer { font-size: 11px; font-weight: bold; margin-top: 4px; color: #555; }
 
     .order-now-btn {
       width: 100%; background: var(--primary-color);
       color: white; border: none; padding: 8px; font-weight: bold;
       border-radius: 6px; margin-top: 8px; cursor: pointer; font-size: 12px;
     }
-    .order-now-btn:disabled {
-      background: #ccc; cursor: not-allowed;
-    }
+    .order-now-btn:disabled { background: #ccc; cursor: not-allowed; }
 
     .admin-btns { display: flex; justify-content: space-between; margin-top: 6px; gap: 4px; }
 
@@ -126,16 +144,15 @@
       width: 100%; max-height: 85vh; overflow-y: auto; position: relative;
     }
     .close-btn { position: absolute; right: 18px; top: 15px; font-size: 22px; cursor: pointer; color: #666; }
-    input, textarea { width: 100%; padding: 10px; margin: 5px 0 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; }
+    input, select, textarea { width: 100%; padding: 10px; margin: 5px 0 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 13px; }
 
-    /* Printable Bill Style */
+    /* Printable Bill & Greeting Card Style */
     .bill-box {
       border: 2px dashed var(--primary-color); padding: 15px; border-radius: 10px;
       background: #fffdf9; margin-top: 10px; font-size: 13px; text-align: left;
     }
     .bill-header { text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 8px; margin-bottom: 10px; }
 
-    /* Greeting Card Style */
     .greeting-card {
       background: linear-gradient(135deg, #fff0f3, #ffccd5);
       border: 2px solid #ff4d6d; border-radius: 15px; padding: 15px;
@@ -167,10 +184,41 @@
       <button class="btn btn-outline" onclick="checkPasswordAndOpenAllOrders()"><i class="fa-solid fa-list-check"></i> सर्व ऑर्डर्स</button>
     </div>
 
-    <div class="trust-badges">
-      <div class="trust-item"><i class="fa-solid fa-shield-halved"></i> १००% सुरक्षित</div>
-      <div class="trust-item"><i class="fa-solid fa-truck-fast"></i> जलद डिलिव्हरी</div>
-      <div class="trust-item"><i class="fa-solid fa-award"></i> उत्कृष्ट दर्जा</div>
+    <!-- Blinkit Style Hero Banner -->
+    <div class="hero-banner">
+      <h2>CELEBRATE RAKSHA BANDHAN</h2>
+      <p>✨ खास डिझाईन्स आणि जलद घरपोच सुविधा ✨</p>
+    </div>
+
+    <!-- Blinkit Style Category Grid -->
+    <div class="category-section">
+      <h3>✨ Find The Perfect Rakhi</h3>
+      <div class="category-grid">
+        <div class="cat-card" onclick="filterByCategory('all')">
+          <i class="fa-solid fa-border-all"></i>
+          <span>सर्व राख्या</span>
+        </div>
+        <div class="cat-card" onclick="filterByCategory('Super Hero')">
+          <i class="fa-solid fa-mask"></i>
+          <span>Super Hero</span>
+        </div>
+        <div class="cat-card" onclick="filterByCategory('Peacock')">
+          <i class="fa-solid fa-feather-pointed"></i>
+          <span>Peacock</span>
+        </div>
+        <div class="cat-card" onclick="filterByCategory('Bracelet')">
+          <i class="fa-solid fa-ring"></i>
+          <span>Bracelet</span>
+        </div>
+        <div class="cat-card" onclick="filterByCategory('Lumba')">
+          <i class="fa-solid fa-ribbon"></i>
+          <span>Lumba</span>
+        </div>
+        <div class="cat-card" onclick="filterByCategory('Rudraksh & Om')">
+          <i class="fa-solid fa-om"></i>
+          <span>Rudraksh/Om</span>
+        </div>
+      </div>
     </div>
 
     <button class="btn btn-primary" style="width:100%; margin-bottom: 12px;" onclick="checkPasswordAndOpenUpload()">
@@ -179,7 +227,7 @@
 
     <input type="text" id="searchInput" class="search-box" placeholder="🔎 राखी शोधून पहा..." onkeyup="filterRakhis()">
 
-    <h3 style="margin: 0 0 10px 4px; font-size: 15px;">✨ उपलब्ध राख्या</h3>
+    <h3 style="margin: 0 0 10px 4px; font-size: 15px;" id="sectionTitle">✨ सर्व उपलब्ध राख्या</h3>
     
     <div id="rakhiContainer" class="rakhi-grid">
       <p style="grid-column: span 2; text-align:center; padding:20px;">लोड होत आहे...</p>
@@ -193,6 +241,14 @@
       <h3>➕ नवीन राखी जोडा</h3>
       <input type="file" id="uploadImageFile" accept="image/*" onchange="previewFileImage(event)">
       <input type="text" id="uploadName" placeholder="राखीचे नाव">
+      <select id="uploadCategory">
+        <option value="Super Hero">Super Hero</option>
+        <option value="Peacock">Peacock</option>
+        <option value="Bracelet">Bracelet</option>
+        <option value="Lumba">Lumba</option>
+        <option value="Rudraksh & Om">Rudraksh & Om</option>
+        <option value="इतर">इतर</option>
+      </select>
       <input type="number" id="uploadPrice" placeholder="विक्री किंमत (उदा. 50)">
       <input type="number" id="uploadStock" placeholder="साठा (नग)">
       <button class="btn btn-primary" style="width:100%;" onclick="uploadRakhiToFirebase()">सेव्ह करा</button>
@@ -232,14 +288,13 @@
     </div>
   </div>
 
-  <!-- Success Bill & Greeting Modal -->
+  <!-- Success Modal -->
   <div id="successModal" class="modal">
     <div class="modal-content" style="text-align:center;">
       <span class="close-btn" onclick="closeModal('successModal')">&times;</span>
       <h2 style="color:#28a745; margin-bottom:5px;">🎉 ऑर्डर यशस्वी झाली!</h2>
       <p style="font-size:12px; margin-top:0;">तुमची ऑर्डर नोंदवली गेली आहे.</p>
 
-      <!-- Bill -->
       <div class="bill-box" id="printableBill">
         <div class="bill-header">
           <b style="font-size:15px; color:var(--primary-color);">🚩 ज्ञानप्रबोधिनी गुरुकुल राखी विक्री २०२६ 🚩</b><br>
@@ -248,7 +303,6 @@
         <div id="billDetails"></div>
       </div>
 
-      <!-- Greeting Card -->
       <div class="greeting-card">
         <h3>✨ शुभ रक्षाबंधन! ✨</h3>
         <p id="greetingText" style="font-size:13px; color:#555;"></p>
@@ -318,10 +372,6 @@
       } catch (e) {}
     }
 
-    document.body.addEventListener('click', () => {
-      if ("Notification" in window && Notification.permission !== "granted") Notification.requestPermission();
-    }, { once: true });
-
     const ordersRef = ref(database, 'orders');
     onChildAdded(ordersRef, (snapshot) => {
       if (isInitialLoad) return;
@@ -366,13 +416,14 @@
 
     window.uploadRakhiToFirebase = function() {
       const name = document.getElementById("uploadName").value.trim();
+      const category = document.getElementById("uploadCategory").value;
       const price = document.getElementById("uploadPrice").value.trim();
       const stock = document.getElementById("uploadStock").value.trim();
       const image = base64Image || "https://via.placeholder.com/200?text=Rakhi";
 
       if (!name || !price || !stock) return alert("सर्व माहिती भरा!");
 
-      push(ref(database, 'rakhis'), { name, price: Number(price), stock: Number(stock), image, timestamp: Date.now() })
+      push(ref(database, 'rakhis'), { name, category, price: Number(price), stock: Number(stock), image, timestamp: Date.now() })
       .then(() => { alert("राखी अपलोड झाली!"); closeModal("uploadModal"); });
     };
 
@@ -407,7 +458,7 @@
           card.className = "rakhi-card";
           card.innerHTML = `
             <div class="img-container">
-              <span class="badge-trending">खास निवड</span>
+              <span class="badge-trending">${item.category || 'खास'}</span>
               ${stockBadgeHTML}
               <img src="${item.image}" onclick="openRakhiModalByCard('${key}')" onerror="this.src='https://via.placeholder.com/200?text=Rakhi'">
             </div>
@@ -416,23 +467,36 @@
               <div class="price-group">
                 <span class="rakhi-price">₹${item.price}</span>
                 <span class="mrp-price">M.R.P: ₹${realMRP}</span>
-                <span class="save-tag">(₹${discountAmt} बचत)</span>
               </div>
               <div class="stock-text-customer">
-                ${isOut ? '<span style="color:red;">सध्या उपलब्ध नाही</span>' : `उपलब्ध साठा: <b>${stockNum} नग</b>`}
+                ${isOut ? '<span style="color:red;">सध्या उपलब्ध नाही</span>' : `उपलब्ध: <b>${stockNum} नग</b>`}
               </div>
               <button class="order-now-btn" ${isOut ? 'disabled' : ''} onclick="openRakhiModalByCard('${key}')">
-                ${isOut ? 'Out of Stock' : '🛒 आताच खरेदी करा'}
+                ${isOut ? 'Out of Stock' : '🛒 खरेदी करा'}
               </button>
               <div class="admin-btns">
-                <button class="btn-warning" onclick="openEditModal('${key}', event)">✏️ एडिट</button>
-                <button class="btn-danger" onclick="deleteRakhi('${key}', event)">🗑️ डिलीट</button>
+                <button class="btn-warning" onclick="openEditModal('${key}', event)">✏️</button>
+                <button class="btn-danger" onclick="deleteRakhi('${key}', event)">🗑️</button>
               </div>
             </div>`;
           container.appendChild(card);
         });
       } else container.innerHTML = "<p style='grid-column:span 2; text-align:center;'>सध्या एकही राखी उपलब्ध नाही.</p>";
     }
+
+    window.filterByCategory = function(category) {
+      if (category === 'all') {
+        document.getElementById("sectionTitle").innerText = "✨ सर्व उपलब्ध राख्या";
+        renderRakhis(allRakhisData);
+      } else {
+        document.getElementById("sectionTitle").innerText = "✨ " + category + " राख्या";
+        const filtered = {};
+        Object.keys(allRakhisData).forEach(key => {
+          if (allRakhisData[key].category === category) filtered[key] = allRakhisData[key];
+        });
+        renderRakhis(filtered);
+      }
+    };
 
     window.filterRakhis = function() {
       const query = document.getElementById("searchInput").value.toLowerCase();
@@ -483,7 +547,6 @@
       } else alert("चुकीचा पासवर्ड!");
     };
 
-    // Place Order
     window.placeOrder = function() {
       const name = document.getElementById("custName").value.trim();
       const address = document.getElementById("custAddress").value.trim();
@@ -492,7 +555,7 @@
       const note = document.getElementById("custNote").value.trim();
 
       if (!name || !address || !qty || !phone) return alert("कृपया सर्व माहिती भरा!");
-      if (qty > selectedRakhi.stock) return alert("साठ्यापेक्षा जास्त नग टाकले आहेत! सध्या फक्त " + selectedRakhi.stock + " नग उपलब्ध आहेत.");
+      if (qty > selectedRakhi.stock) return alert("साठ्यापेक्षा जास्त नग टाकले आहेत!");
 
       const totalAmt = selectedRakhi.price * qty;
       const orderDate = new Date().toLocaleString();
@@ -505,7 +568,6 @@
         update(ref(database, 'rakhis/' + selectedRakhiKey), { stock: selectedRakhi.stock - qty });
         closeModal("orderModal");
 
-        // Set Bill Details
         document.getElementById("billDetails").innerHTML = `
           <b>ग्राहक:</b> ${name}<br>
           <b>मोबाईल:</b> ${phone}<br>
@@ -519,10 +581,8 @@
           <small style="color:#888;">तारीख: ${orderDate}</small>
         `;
 
-        // Set Greeting Card Details
         document.getElementById("greetingText").innerText = `प्रिय ${name}, 'ज्ञानप्रबोधिनी गुरुकुल राखी विक्री २०२६' कडून तुम्हाला रक्षाबंधनाचे मनःपूर्वक शुभेच्छा!`;
 
-        // Setup WhatsApp Share Link
         const waText = encodeURIComponent(`🚩 *ज्ञानप्रबोधिनी गुरुकुल राखी विक्री २०२६ - ऑर्डर बिल* 🚩\n\n*ग्राहक:* ${name}\n*राखी:* ${selectedRakhi.name} (${qty} नग)\n*एकूण बिल:* ₹${totalAmt}\n\n✨ *रक्षाबंधन शुभेच्छा!* ✨`);
         document.getElementById("whatsappShareBtn").onclick = () => {
           window.open(`https://api.whatsapp.com/send?text=${waText}`, '_blank');
